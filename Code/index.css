@@ -1,0 +1,23 @@
+body {
+    background-color: white;
+}
+
+.sidenav {
+    padding-top: 30px;
+    background-color: white;
+    height: 100%;
+}
+
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+#CenterPage {
+    padding-top: 30px;
+}
+
+#VraagButton {
+    width: 400px;
+    height: 250px;
+}
