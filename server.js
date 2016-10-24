@@ -19,7 +19,7 @@ var datani;
 var indatabase;
 var indatabaselesnaam;
  
-
+//////////////////MONGO WEG VOOR LOKAAL FF//////////////////////////////
 // configuration ===============================================================
 mongoose.connect(database.url); 	// connect to mongoDB database on modulus.io
 
@@ -38,15 +38,17 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
 
 // API ======================================================================
 
-var randomcode = randomstring.generate(7);
 
-
-console.log(randomcode);
 fs.readFile( __dirname + "/" + "lijstje.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
 });
 
 
+app.get('/randomcode', function (req, res) {
+            var randomcode = randomstring.generate(7);
+            console.log(randomcode);
+			res.json( randomcode);       
+});
 
 app.get('/heeljson', function (req, res) {		 
 			res.json( datani);
@@ -116,7 +118,7 @@ app.get('/zoekles/:naam/:lesnaam', function (req, res) {
 });
 
 
-app.post('/update/:naam/:lesnaam', function (req, res) {
+app.post('/adduser/:naam', function (req, res) {
 
         indatabase = false;
         for (var i = 0; i < datani.users.length; i++) {
@@ -126,7 +128,7 @@ app.post('/update/:naam/:lesnaam', function (req, res) {
                     
                     console.log("User is al in database");
                     res.json("User is al in database");
-                    console.log(datani.users[i].Lessen)
+                    console.log(datani.users[i].Lessen);
                     indatabase = true;
                     break;
                 }
@@ -137,21 +139,72 @@ app.post('/update/:naam/:lesnaam', function (req, res) {
             {
                 "naam":req.params.naam, 
                   "Lessen" : 
-                    [{
-                    "naam":req.params.lesnaam,
-                        "vragen" : 
-                        [{
-                          "vraag":"voorbeeldvraag",
-                          "id":"0",
-                          "probleemvraag":"false"
-                        }]
-                    }]
+                    []
             }
             datani.users.push(newuser);
+            console.log(datani.users);
             res.json(datani.users);
         }
+        
+        
+});
+app.post('/addquestion/:naam/:lesnaam/:vraag', function (req, res) {
+
+        indatabase = false;
+        indatabaselesnaam = false;
+        for (var i = 0; i < datani.users.length; i++) {
+                
+
+                if (datani.users[i].naam == req.params.naam) {
+                    indatabase = true;
+                    console.log("In de database gestoken");
+                    for (var x = 0; x < datani.users[i].Lessen.length; x++) {
+                                    if (datani.users[i].Lessen[x].naam == req.params.lesnaam) {
+                                        indatabaselesnaam = true;
+
+                                        var newvraag =
+
+                                            {
+                                                      "vraag":req.params.vraag,
+                                                      "id":"0",
+                                                      "probleemvraag":"false"
+                                             }
+
+                                        datani.users[i].Lessen[x].vragen.push(newvraag);
+                                        res.json(datani.users[i].Lessen[x]);
+                                        break;
+                                    }
+                    }
+                    if(!indatabaselesnaam){
+                     var newlesenvraag =
+                     {
+                          "naam":req.params.lesnaam,
+                          "vragen" : 
+                          [{
+                               "vraag":req.params.vraag,
+                               "id":"0",
+                               "probleemvraag":"false"
+                           }]
+                      }
+                     datani.users[i].Lessen.push(newlesenvraag);
+                      res.json(datani.users[i].Lessen[x]);  
+                
+                    }
+                    
+                    console.log(datani.users[i].Lessen)
+                    break;
+                }
+        }
+        if(!indatabase){
+            
+                               
+            
+        }
+        
+        
 });
 
+////////////////////////////////// USER MAKEN EN LES MAKEN APPART/////////////////////////////////////////
 
 /*
 app.delete('/delete/:naam', function (req, res) {
