@@ -33,9 +33,6 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
 });
 
 // routes ======================================================================
-require('./app/routes.js')(app);
-
-
 
 var randomcode = randomstring.generate(7);
 
