@@ -1,20 +1,24 @@
 var express = require('express');
-var app = express();
-var randomstring = require("randomstring");
-var fs = require("fs");
-var port  	 = process.env.PORT || 8080;
 var mongoose = require('mongoose'); 
 var database = require('./config/database'); 			// load the database config
 var morgan   = require('morgan');
+var randomstring = require("randomstring");
+var fs = require("fs");
 var methodOverride = require('method-override');
-var datani;
-var indatabase;
-var indatabaselesnaam;
+var app = express();
+
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
-})); 
+}));
+
+var port  	 = process.env.PORT || 8080;
+
+var datani;
+var indatabase;
+var indatabaselesnaam;
+ 
 
 // configuration ===============================================================
 mongoose.connect(database.url); 	// connect to mongoDB database on modulus.io
@@ -32,7 +36,7 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
   next();
 });
 
-// routes ======================================================================
+// API ======================================================================
 
 var randomcode = randomstring.generate(7);
 
