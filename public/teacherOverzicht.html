@@ -29,7 +29,7 @@
         var app = angular.module("myShoppingList", []);
         
     app.controller("myCtrl", function($scope ,$http, $filter){
-       $http.get("http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com/:5000/heeljson")
+       $http.get("http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/heeljson")
         .success(function(posts){
         $scope.posts = posts;
         });
@@ -38,7 +38,7 @@
             $scope.errortext = "";
             if (!$scope.addMe) {return;}
             
-                $http.post("http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com/update/kenny/"+$scope.addMe)
+                $http.post("http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/update/kenny/"+$scope.addMe)
         }
     });
       </script>
