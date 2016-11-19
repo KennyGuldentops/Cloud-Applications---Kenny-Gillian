@@ -10,6 +10,7 @@
     "morgan"          : "~1.1.1",
     "body-parser"     : "~1.4.3",
     "method-override" : "~2.1.1",
-    "randomstring"    : "~1.1.5"
+    "randomstring"    : "~1.1.5",
+    "socket.io"       : "~1.5.1"  
   }
 }

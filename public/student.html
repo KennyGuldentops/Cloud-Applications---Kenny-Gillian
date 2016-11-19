@@ -12,12 +12,31 @@
       <!-- Bootstrap, Font Awesome, Bootswatch JavaScript CDN -->
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
       
+      <!-- AngularJS -->
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+      
       <!-- Main css -->
       <link href="css/index.css" rel="stylesheet">
   </head>
-
-  <body>
-
+    
+    <body ng-app="myApp" ng-controller="myCtrl">
+        
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+        
+        $scope.betreedt = function() {
+            console.log($scope.code);
+            
+            var timer = setTimeout(function() {
+                window.location="/collectVragen.html"
+            }, 100);
+            var socket = io('/'+$scope.code);
+        }
+        });
+      </script>
+      
       <!-- Navigatie bar -->
       <nav class="navbar navbar-inverse">
 
@@ -45,8 +64,10 @@
             <h2>Type here the code that the teacher has given you to join the session</h2>
               <br>
               
-            <input type="text" class="form-control input-lg" style="text-align:center">
-            
+            <input ng-model="code" type="text" class="form-control input-lg" style="text-align:center" >
+            <br>
+            <br>
+            <button ng-click="betreedt()" type="button" id="VraagButton" class="btn btn-primary btn-lg">Betreedt les</button>
         </div>
       
       </div>

@@ -5,7 +5,9 @@ var morgan   = require('morgan');
 var randomstring = require("randomstring");
 var fs = require("fs");
 var methodOverride = require('method-override');
-var app = express();
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -13,7 +15,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-var port  	 = process.env.PORT || 8080;
+var port  	 = process.env.PORT || 80;
 
 var datani;
 var indatabase;
@@ -21,7 +23,7 @@ var indatabaselesnaam;
  
 //////////////////MONGO WEG VOOR LOKAAL FF//////////////////////////////
 // configuration ===============================================================
-mongoose.connect(database.url); 	// connect to mongoDB database on modulus.io
+//mongoose.connect(database.url); 	// connect to mongoDB database on modulus.io
 
 app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
@@ -36,24 +38,45 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
   next();
 });
 
+
+// socket met enkele room
+var nsp = io.of('/OERZNi0');
+nsp.on('connection', function(socket){
+  console.log('someone connected');
+    socket.on('chatmessage', function(msg){
+        console.log('message: ' + msg);
+    });
+    socket.on('disconnect', function(){
+        console.log('someone disconnected');
+    });
+});
+
 // API ======================================================================
-
-
 fs.readFile( __dirname + "/" + "lijstje.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
 });
 
-
 app.get('/randomcode', function (req, res) {
-            var randomcode = randomstring.generate(7);
-            console.log(randomcode);
-			res.json( randomcode);       
+        //Socket
+    
+    
+    
+    var RandomRoomCode = randomstring.generate(7);
+    var socketConnection = io.of('/'+RandomRoomCode);
+    console.log("Someone made a room with code: " + RandomRoomCode);
+       socketConnection.on('connection', function(socket){
+        socket.join(RandomRoomCode);
+       });
+    res.json(RandomRoomCode);
 });
+
 
 app.get('/heeljson', function (req, res) {		 
 			res.json( datani);
             console.log(datani);
 });
+
+    
 
 app.get('/zoek/:naam', function (req, res) {
 
@@ -216,7 +239,7 @@ app.delete('/delete/:naam', function (req, res) {
 
 */
 
-var server = app.listen(port, function () {
+var server = http.listen(port, function () {
 
   var host = server.address().address
   var port = server.address().port

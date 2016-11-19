@@ -14,13 +14,35 @@
       <!-- Bootstrap, Font Awesome, Bootswatch JavaScript CDN -->
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
       
+      <!-- AngularJS -->
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+      
       <!-- Main css -->
       <link href="css/index.css" rel="stylesheet">
       <!-- Social buttons CSS -->
       <link href="css/bootstrap-social.css.css" rel="stylesheet">
   </head>
 
-  <body>
+    <script>
+        var RandomCode = localStorage.getItem('FilterRandomCode');
+        console.log(RandomCode);
+        
+        $(function(){
+            document.getElementById('RandomCode').innerHTML = RandomCode;
+        });
+        
+        var Lesnaam = localStorage.getItem('StorageLesNaam');  
+        var LesNaamFiltered = Lesnaam.slice(1,-1);
+        console.log(LesNaamFiltered);
+    </script>
+    
+
+    
+  <body ng-app="ApiCall" ng-cloak ng-controller="myCtrl">
+      
+      <script>
+      </script>
+      
 
       <!-- Navigatie bar -->
       <nav class="navbar navbar-inverse">
@@ -47,14 +69,16 @@
       
         <div id="CenterPage" class="col-sm-12 text-center">
 
-            <h1>CODE VOOR KLAS</h1>
+                
+            <h1 id="RandomCode"/>
             <hr>
             <br>
             <h2>Stel de vraag</h2>
             <br>
-            <form name="VragenForm">
-                <input name="myText" class="form-control input-lg" type="text" style="text-align:center"/>
-            </form>
+            <ul id="messages"></ul>
+            
+                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+            
             <br>
             <br>
             <h2>Selecteer welke soort vraag het is</h2>
@@ -68,7 +92,7 @@
             <br>
             <br>
             
-            <button type="button" id="VraagButton" class="btn btn-primary btn-lg">Stel vraag!</button>
+            <button ng-click="addVraag()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
             <br>
             <br>
             <button type="button" id="VraagButton" class="btn btn-primary btn-lg">Stop sessie</button>
@@ -79,7 +103,31 @@
             
         </div>
       </div>
+            <ul id="messages"></ul>
+       
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var websock = io('/OERZNi0');
+        var app = angular.module("ApiCall", []);
+        app.controller("myCtrl", function($scope ,$http, $filter){
             
+        $scope.addVraag = function() {
+             $http({method: 'POST', url: "http://localhost/addquestion/Jan/"+LesNaamFiltered+"/"+$scope.addMe
+                  }).then(function successCallback(response) {
+                    console.log("User updated");
+                    websock.emit('chatmessage', $('#m').val());
+                    $('#m').val('');
+                    
+                    websock.on('chatmessage', function(msg){
+                        $('#messages').append($('<li>').text(msg));
+                        cosole.log("testters");
+                    });   
+                }, function errorCallback(response) {
+                    console.log("error met deze user te updaten");
+              }); 
+        }
+        }); 
+    </script>
   </body>
     
     
