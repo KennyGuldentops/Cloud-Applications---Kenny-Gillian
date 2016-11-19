@@ -21,27 +21,44 @@
       <link href="css/index.css" rel="stylesheet">
       <!-- Social buttons CSS -->
       <link href="css/bootstrap-social.css.css" rel="stylesheet">
-  </head>
+  </head>    
 
-  <body ng-app="myShoppingList" ng-cloak ng-controller="myCtrl">
+  <body ng-app="ApiCall" ng-cloak ng-controller="myCtrl">
       
+      <script src="/socket.io/socket.io.js"></script>
+
       <script>
-        var app = angular.module("myShoppingList", []);
-        
-    app.controller("myCtrl", function($scope ,$http, $filter){
-       $http.get("http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/heeljson")
-        .success(function(posts){
-        $scope.posts = posts;
+        var app = angular.module("ApiCall", []);
+        app.controller("myCtrl", function($scope ,$http, $filter){
+         
+        $scope.StartLes = function() {
+            $http({method: 'GET'
+                   , url: 'http://localhost/randomcode'
+                  }).then(function successCallback(response) {
+                    var RandomCode = response.data;
+                    localStorage.setItem('FilterRandomCode', JSON.stringify(RandomCode));
+                
+                    var LesNaam = document.getElementById("LesNaam").value;
+                    localStorage.setItem('StorageLesNaam', JSON.stringify(LesNaam));    
+                
+                    var timer = setTimeout(function() {
+                        window.location="/teacherVragen.html"
+                    }, 100);
+                
+                    var socket = io('/' + RandomCode);
+                    socket.on('news', function(data){
+                        console.log(data);
+                        socket.emit('my other event', {my: 'data'});
+                    });
+                
+                }, function errorCallback(response) {
+                    console.log("error met code");
+              });  
+            }
         });
-        
-        $scope.addItem = function() {
-            $scope.errortext = "";
-            if (!$scope.addMe) {return;}
-            
-                $http.post("http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/update/kenny/"+$scope.addMe)
-        }
-    });
       </script>
+      
+      
 
       <!-- Navigatie bar -->
       <nav class="navbar navbar-inverse">
@@ -75,9 +92,9 @@
             <br>
             
             <form name="myForm">
-              <input ng-model="addMe" name="myText" class="form-control input-lg" type="text" name="test" ng-model="mytext" required />
+              <input name="myText" class="form-control input-lg" type="text" name="test" ng-model="mytext" id="LesNaam"required />
                 <br>
-              <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="addItem()">Start les</button>
+              <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="StartLes()" >Start les</button>
     </form>
             
         </div>

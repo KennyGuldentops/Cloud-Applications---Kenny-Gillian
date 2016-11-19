@@ -5,9 +5,15 @@ var morgan   = require('morgan');
 var randomstring = require("randomstring");
 var fs = require("fs");
 var methodOverride = require('method-override');
+<<<<<<< HEAD
 var app = express();
 var WebSocketServer = require('websocket').server;
 var http = require('http');
+=======
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+>>>>>>> ecdaee4b1babcb314fee203a44b6ad532fd32ae6
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -15,7 +21,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-var port  	 = process.env.PORT || 8080;
+var port  	 = process.env.PORT || 80;
 
 var datani;
 var indatabase;
@@ -23,6 +29,7 @@ var indatabaselesnaam;
  
 //////////////////MONGO WEG VOOR LOKAAL FF//////////////////////////////
 // configuration ===============================================================
+<<<<<<< HEAD
 var newjson;
 var MongoClient = mongodb.MongoClient;
 MongoClient.connect(database.url, function (err, db) {
@@ -49,6 +56,10 @@ MongoClient.connect(database.url, function (err, db) {
 });
   }       
 });         
+=======
+//mongoose.connect(database.url); 	// connect to mongoDB database on modulus.io
+
+>>>>>>> ecdaee4b1babcb314fee203a44b6ad532fd32ae6
 app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({'extended':'true'})); // parse application/x-www-form-urlencoded
@@ -62,9 +73,20 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
   next();
 });
 
-// API ======================================================================
 
+// socket met enkele room
+var nsp = io.of('/OERZNi0');
+nsp.on('connection', function(socket){
+  console.log('someone connected');
+    socket.on('chatmessage', function(msg){
+        console.log('message: ' + msg);
+    });
+    socket.on('disconnect', function(){
+        console.log('someone disconnected');
+    });
+});
 
+<<<<<<< HEAD
 fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
 });
@@ -88,16 +110,34 @@ app.get('/push', function (req, res) {
 });                   
 });
 
-app.get('/randomcode', function (req, res) {
-            var randomcode = randomstring.generate(7);
-            console.log(randomcode);
-			res.json( randomcode);       
+=======
+// API ======================================================================
+fs.readFile( __dirname + "/" + "lijstje.json", 'utf8', function (err, data) {
+datani = JSON.parse( data );
 });
+
+>>>>>>> ecdaee4b1babcb314fee203a44b6ad532fd32ae6
+app.get('/randomcode', function (req, res) {
+        //Socket
+    
+    
+    
+    var RandomRoomCode = randomstring.generate(7);
+    var socketConnection = io.of('/'+RandomRoomCode);
+    console.log("Someone made a room with code: " + RandomRoomCode);
+       socketConnection.on('connection', function(socket){
+        socket.join(RandomRoomCode);
+       });
+    res.json(RandomRoomCode);
+});
+
 
 app.get('/heeljson', function (req, res) {		 
 			res.json( datani);
             console.log(datani);
 });
+
+    
 
 app.get('/zoek/:naam', function (req, res) {
 
@@ -260,7 +300,7 @@ app.delete('/delete/:naam', function (req, res) {
 
 */
 
-var server = app.listen(port, function () {
+var server = http.listen(port, function () {
 
   var host = server.address().address
   var port = server.address().port
