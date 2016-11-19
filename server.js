@@ -1,11 +1,13 @@
 var express = require('express');
-var mongoose = require('mongoose'); 
+var mongodb = require('mongodb'); 
 var database = require('./config/database'); 			// load the database config
 var morgan   = require('morgan');
 var randomstring = require("randomstring");
 var fs = require("fs");
 var methodOverride = require('method-override');
 var app = express();
+var WebSocketServer = require('websocket').server;
+var http = require('http');
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -21,8 +23,32 @@ var indatabaselesnaam;
  
 //////////////////MONGO WEG VOOR LOKAAL FF//////////////////////////////
 // configuration ===============================================================
-mongoose.connect(database.url); 	// connect to mongoDB database on modulus.io
-
+var newjson;
+var MongoClient = mongodb.MongoClient;
+MongoClient.connect(database.url, function (err, db) {
+  if (err) {
+    console.log('Unable to connect to the mongoDB server. Error:', err);
+  } else {
+    console.log('pulling jsonfile');
+      var collection = db.collection("dummyDB");
+       db.collection('dummyDB').find({}).toArray( function(err, json){
+    if(err){
+        console.log(err);
+   
+    }
+    else{
+        console.log(json);
+        json.forEach(function(doc) {
+                console.log("Doc from Array ");
+                newjson = JSON.stringify(doc);
+                delete newjson["id"];
+                console.log(newjson);
+        })
+        
+    }
+});
+  }       
+});         
 app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({'extended':'true'})); // parse application/x-www-form-urlencoded
@@ -39,10 +65,28 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
 // API ======================================================================
 
 
-fs.readFile( __dirname + "/" + "lijstje.json", 'utf8', function (err, data) {
+fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
 });
 
+
+app.get('/push', function (req, res) {
+    fs.writeFile( __dirname + "/" + "lijstje2.json",newjson , 'utf8', function (err, data) {
+
+});
+    
+   MongoClient.connect(database.url, function (err, db) {
+  if (err) {
+    console.log('Unable to connect to the mongoDB server. Error:', err);
+  } else {
+    //HURRAY!! We are connected. :)
+    console.log('Connection established to');
+      var collection = db.collection("dummyDB");
+        collection.remove({}, function (err, remove) {});
+      collection.insert(datani, function(err, doc) {if(err) throw err;});
+  }       
+});                   
+});
 
 app.get('/randomcode', function (req, res) {
             var randomcode = randomstring.generate(7);
