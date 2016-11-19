@@ -5,15 +5,12 @@ var morgan   = require('morgan');
 var randomstring = require("randomstring");
 var fs = require("fs");
 var methodOverride = require('method-override');
-<<<<<<< HEAD
-var app = express();
 var WebSocketServer = require('websocket').server;
 var http = require('http');
-=======
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
->>>>>>> ecdaee4b1babcb314fee203a44b6ad532fd32ae6
+
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -27,9 +24,8 @@ var datani;
 var indatabase;
 var indatabaselesnaam;
  
-//////////////////MONGO WEG VOOR LOKAAL FF//////////////////////////////
-// configuration ===============================================================
-<<<<<<< HEAD
+//////////////////MONGO WEG VOOR LOKAAL 
+// configuration 
 var newjson;
 var MongoClient = mongodb.MongoClient;
 MongoClient.connect(database.url, function (err, db) {
@@ -56,10 +52,10 @@ MongoClient.connect(database.url, function (err, db) {
 });
   }       
 });         
-=======
+
 //mongoose.connect(database.url); 	// connect to mongoDB database on modulus.io
 
->>>>>>> ecdaee4b1babcb314fee203a44b6ad532fd32ae6
+
 app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({'extended':'true'})); // parse application/x-www-form-urlencoded
@@ -86,7 +82,7 @@ nsp.on('connection', function(socket){
     });
 });
 
-<<<<<<< HEAD
+
 fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
 });
@@ -110,13 +106,11 @@ app.get('/push', function (req, res) {
 });                   
 });
 
-=======
-// API ======================================================================
+// API 
 fs.readFile( __dirname + "/" + "lijstje.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
 });
 
->>>>>>> ecdaee4b1babcb314fee203a44b6ad532fd32ae6
 app.get('/randomcode', function (req, res) {
         //Socket
     
