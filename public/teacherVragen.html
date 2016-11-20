@@ -156,6 +156,7 @@
                     console.log("User updated");
                     websock.emit('chat message', $('#m').val());
                     $('#m').val('');
+                    websock.emit('typevraag', type);
                     
                   
                 }, function errorCallback(response) {
@@ -165,6 +166,7 @@
         }); 
     </script>
       <script>
+        var type;
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();
             $("#CodeVraag").hide();
@@ -176,6 +178,7 @@
             $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
+            type = "open";
         });
            $("#vraag2").click(function(){
             $("#OpenVraag").hide();
@@ -183,6 +186,7 @@
             $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
+            type = "janee";
         });
            $("#vraag3").click(function(){
             $("#OpenVraag").hide();
@@ -190,6 +194,7 @@
             $("#CodeVraag").show();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
+            type = "code";
         });
            $("#vraag4").click(function(){
             $("#OpenVraag").hide();
@@ -197,6 +202,7 @@
             $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").show();
             $("#AfbeeldingVraag").hide();
+            type = "meerkeuzen";
         });
            $("#vraag5").click(function(){
             $("#OpenVraag").hide();
@@ -204,9 +210,10 @@
             $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").show();
+            type = "afbeelding";
         });
          
-        
+       
     </script>
       
   </body>

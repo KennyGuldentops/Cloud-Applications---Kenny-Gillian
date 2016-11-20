@@ -77,6 +77,10 @@ nsp.on('connection', function(socket){
         nsp.emit('chat message', msg);
         console.log('message: ' + msg);
     });
+    socket.on('typevraag', function(type){
+         nsp.emit('typevraag', type);
+        console.log('typevraag: '+type);
+    });
     socket.on('disconnect', function(){
         console.log('someone disconnected');
     });
