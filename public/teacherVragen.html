@@ -35,6 +35,9 @@
         var LesNaamFiltered = Lesnaam.slice(1,-1);
         console.log(LesNaamFiltered);
     </script>
+           
+       
+
     
 
     
@@ -73,37 +76,73 @@
             <h1 id="RandomCode"/>
             <hr>
             <br>
-            <h2>Stel de vraag</h2>
-            <br>
-            <ul id="messages"></ul>
-            
-                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
-            
             <br>
             <br>
             <h2>Selecteer welke soort vraag het is</h2>
             <br>
-            <button type="button" id="VraagButton" class="btn btn-default btn-lg">Open vraag</button>
-            <button type="button" id="VraagButton" class="btn btn-default btn-lg">ja/nee vraag</button>
-            <button type="button" id="VraagButton" class="btn btn-default btn-lg">Code vraag</button>
-            <button type="button" id="VraagButton" class="btn btn-default btn-lg">Meerkeuze vraag</button>
-            <button type="button" id="VraagButton" class="btn btn-default btn-lg">Teken vraag</button>
-            <button type="button" id="VraagButton" class="btn btn-default btn-lg">Afbeelding vraag</button>
-            <br>
+            <button type="button" id="vraag1" class="btn btn-default btn-lg">Open vraag</button>
+            <button type="button" id="vraag2" class="btn btn-default btn-lg">ja/nee vraag</button>
+            <button type="button" id="vraag3" class="btn btn-default btn-lg">Code vraag</button>
+            <button type="button" id="vraag4" class="btn btn-default btn-lg">Meerkeuze vraag</button> 
+            <button type="button" id="vraag5" class="btn btn-default btn-lg">Afbeelding vraag</button>
             <br>
             
-            <button ng-click="addVraag()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
-            <br>
-            <br>
-            <button type="button" id="VraagButton" class="btn btn-primary btn-lg">Stop sessie</button>
+       
+            <div id="OpenVraag">
+                <br>            <h2>Stel de Openvraag</h2>
+                <br>
+                <ul id="messages"></ul>
+                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+            </div>
             
-        </div>
+             <div id="JaNeeVraag">
+                <br>            <h2>Stel de Ja/Nee vraag</h2>
+                <br>
+                <ul id="messages"></ul>
+                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+            </div>
+            
+             <div id="CodeVraag">
+                <br>            <h2>Stel de Code vraag</h2>
+                <br>
+                <ul id="messages"></ul>
+                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+            </div>
+            
+             <div id="MeerkeuzenVraag">
+                <br>            <h2>Stel de Meerkeuzen vraag</h2>
+                <br>
+                <ul id="messages"></ul>
+                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+                  <h3>Mogenlijke Antwoorden</h3>
+                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
+                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
+                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
+                 
+            </div>
+            
+             <div id="AfbeeldingVraag">
+                <br>            <h2>Stel de Afbeelding vraag</h2>
+                <br>
+                <ul id="messages"></ul>
+                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+                 <form name="myForm" ng-submit="">
+                <input ng-model='file' type="file"/>
+                <input type="submit" value='Submit'/>
+                </form>
+            </div>
+            
+            
+            
+                <br>
+                <button ng-click="addVraag()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
+                <button type="button" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
+          </div>
       
 
             
         </div>
       </div>
-            <ul id="messages"></ul>
        
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -115,19 +154,61 @@
              $http({method: 'POST', url: "http://localhost/addquestion/Jan/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     console.log("User updated");
-                    websock.emit('chatmessage', $('#m').val());
+                    websock.emit('chat message', $('#m').val());
                     $('#m').val('');
                     
-                    websock.on('chatmessage', function(msg){
-                        $('#messages').append($('<li>').text(msg));
-                        cosole.log("testters");
-                    });   
+                  
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
               }); 
         }
         }); 
     </script>
+      <script>
+            $("#OpenVraag").hide();
+            $("#JaNeeVraag").hide();
+            $("#CodeVraag").hide();
+            $("#MeerkeuzenVraag").hide();
+            $("#AfbeeldingVraag").hide();
+        $("#vraag1").click(function(){
+            $("#OpenVraag").show();
+            $("#JaNeeVraag").hide();
+            $("#CodeVraag").hide();
+            $("#MeerkeuzenVraag").hide();
+            $("#AfbeeldingVraag").hide();
+        });
+           $("#vraag2").click(function(){
+            $("#OpenVraag").hide();
+            $("#JaNeeVraag").show();
+            $("#CodeVraag").hide();
+            $("#MeerkeuzenVraag").hide();
+            $("#AfbeeldingVraag").hide();
+        });
+           $("#vraag3").click(function(){
+            $("#OpenVraag").hide();
+            $("#JaNeeVraag").hide();
+            $("#CodeVraag").show();
+            $("#MeerkeuzenVraag").hide();
+            $("#AfbeeldingVraag").hide();
+        });
+           $("#vraag4").click(function(){
+            $("#OpenVraag").hide();
+            $("#JaNeeVraag").hide();
+            $("#CodeVraag").hide();
+            $("#MeerkeuzenVraag").show();
+            $("#AfbeeldingVraag").hide();
+        });
+           $("#vraag5").click(function(){
+            $("#OpenVraag").hide();
+            $("#JaNeeVraag").hide();
+            $("#CodeVraag").hide();
+            $("#MeerkeuzenVraag").hide();
+            $("#AfbeeldingVraag").show();
+        });
+         
+        
+    </script>
+      
   </body>
     
     

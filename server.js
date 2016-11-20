@@ -69,19 +69,18 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
   next();
 });
 
-
 // socket met enkele room
 var nsp = io.of('/OERZNi0');
 nsp.on('connection', function(socket){
   console.log('someone connected');
-    socket.on('chatmessage', function(msg){
+    socket.on('chat message', function(msg){
+        nsp.emit('chat message', msg);
         console.log('message: ' + msg);
     });
     socket.on('disconnect', function(){
         console.log('someone disconnected');
     });
 });
-
 
 fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
