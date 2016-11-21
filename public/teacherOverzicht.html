@@ -45,12 +45,6 @@
                         window.location="/teacherVragen.html"
                     }, 100);
                 
-                    var socket = io('/' + RandomCode);
-                    socket.on('news', function(data){
-                        console.log(data);
-                        socket.emit('my other event', {my: 'data'});
-                    });
-                
                 }, function errorCallback(response) {
                     console.log("error met code");
               });  

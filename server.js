@@ -5,7 +5,6 @@ var morgan   = require('morgan');
 var randomstring = require("randomstring");
 var fs = require("fs");
 var methodOverride = require('method-override');
-var WebSocketServer = require('websocket').server;
 var http = require('http');
 var app = require('express')();
 var http = require('http').Server(app);
@@ -73,13 +72,17 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
 var nsp = io.of('/OERZNi0');
 nsp.on('connection', function(socket){
   console.log('someone connected');
-    socket.on('chat message', function(msg){
-        nsp.emit('chat message', msg);
-        console.log('message: ' + msg);
+    socket.on('vraag', function(msg){
+        nsp.emit('vraag', msg);
+        console.log('vraag: ' + msg);
     });
     socket.on('typevraag', function(type){
-         nsp.emit('typevraag', type);
-        console.log('typevraag: '+type);
+        nsp.emit('typevraag', type);
+        console.log('typevraag: ' + type);
+    });
+    socket.on('antwoord', function(antwoord){
+        nsp.emit('antwoord', antwoord);
+        console.log('antwoord: ' + antwoord);
     });
     socket.on('disconnect', function(){
         console.log('someone disconnected');
@@ -120,11 +123,31 @@ app.get('/randomcode', function (req, res) {
     
     
     var RandomRoomCode = randomstring.generate(7);
-    var socketConnection = io.of('/'+RandomRoomCode);
+    /*var socketConnection = io.of('/'+RandomRoomCode);
     console.log("Someone made a room with code: " + RandomRoomCode);
        socketConnection.on('connection', function(socket){
         socket.join(RandomRoomCode);
        });
+    */
+    
+    /*var nsp = io.of('/' + RandomRoomCode);
+nsp.on('connection', function(socket){
+  console.log('someone connected');
+    socket.on('chat message', function(msg){
+        nsp.emit('chat message', msg);
+        console.log('message: ' + msg);
+    });
+    socket.on('typevraag', function(type){
+         nsp.emit('typevraag', type);
+        console.log('typevraag: '+type);
+    });
+    socket.on('disconnect', function(){
+        console.log('someone disconnected');
+    });
+});*/
+
+    
+    
     res.json(RandomRoomCode);
 });
 

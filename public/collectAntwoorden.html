@@ -24,18 +24,16 @@
   </head>
 
   <body>
-      <ul id="messages"></ul>
+      <ul id="vragen"></ul>
       
       <script src="/socket.io/socket.io.js"></script>
       <script>
         var socket = io('/OERZNi0');
-        socket.on('chat message', function(msg){
-            $('#messages').append($('<li>').text(msg));
+        socket.on('antwoord', function(msg){
+            $('#vragen').append($('<li>').text(msg));
       });
       </script>
      
-      
-            
   </body>
     
     

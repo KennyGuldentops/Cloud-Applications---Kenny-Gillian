@@ -23,23 +23,110 @@
       <link href="css/bootstrap-social.css.css" rel="stylesheet">
   </head>
 
-  <body>
-      <script src="/socket.io/socket.io.js"></script>
-      <script>
-        var socket = io('/OERZNi0');
-        socket.on('chat message', function(msg){
-            $('#messages').append($('<li>').text(msg));  
-        });
-        socket.on('typevraag', function(type){
-            $('#typestring').text(type);
-        });
-          
-      </script>
+    <body ng-app="ApiCall" ng-cloak ng-controller="myCtrl">
      
-      <ul id="messages">
-        <li>kappa</li>
-      </ul>
+      <ul id="vragen"></ul>
       <h1 id="typestring">hierkomt het type van de vraag</h1>
             
+      <div id="opendiv">
+            <label for="Code">Open:</label>
+            <input class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+      </div>
+      <div id="janeediv">
+        <form>
+          <input type="radio" value="ja"> ja
+            <br>
+          <input type="radio" value="nee"> nee<br>
+        </form>
+      </div>
+      <div id="codediv">
+          <label for="Code">Code:</label>
+          <textarea class="form-control" rows="5" id="comment"></textarea>
+      </div>
+      <div id="meerkeuzediv">
+        <p>meerkeuzediv</p>
+      </div>
+      <div id="afbeeldingdiv">
+        <p>afbeeldingdiv</p>
+      </div>
+
+
+        <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+        
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+        
+          
+        $("#opendiv").hide();
+        $("#janeediv").hide();
+        $("#codediv").hide();
+        $("#meerkeuzediv").hide();
+        $("#afbeeldingdiv").hide();
+          
+          
+        var app = angular.module("ApiCall", []);
+        app.controller("myCtrl", function($scope){ 
+        $scope.addAnswer = function() {
+          socket.emit('antwoord', $('#m').val());
+          $('#m').val('');
+        }
+        }); 
+          
+        var typevraag;
+        var socket = io('/OERZNi0');
+        socket.on('vraag', function(msg){
+            $('#vragen').append($('<li>').text(msg));  
+        });
+
+          
+        socket.on('typevraag', function(type){
+            $('#typestring').text(type);
+            if (type == "code"){
+                typevraag = "code";
+                console.log(typevraag);
+                $("#opendiv").hide();
+                $("#janeediv").hide();
+                $("#codediv").show();
+                $("#meerkeuzediv").hide();
+                $("#afbeeldingdiv").hide(); 
+            }
+            if (type == "janee"){
+                typevraag = "janee";
+                console.log(typevraag);
+                $("#opendiv").hide();
+                $("#janeediv").show();
+                $("#codediv").hide();
+                $("#meerkeuzediv").hide();
+                $("#afbeeldingdiv").hide();
+            }
+            if (type == "open"){
+                typevraag = "open";
+                console.log(typevraag);
+                $("#opendiv").show();
+                $("#janeediv").hide();
+                $("#codediv").hide();
+                $("#meerkeuzediv").hide();
+                $("#afbeeldingdiv").hide();
+            }
+            if (type == "meerkeuzen"){
+                typevraag = "meerkeuzen";
+                console.log(typevraag);
+                $("#opendiv").hide();
+                $("#janeediv").hide();
+                $("#codediv").hide();
+                $("#meerkeuzediv").show();
+                $("#afbeeldingdiv").hide();
+            }
+            if (type == "afbeelding"){
+                typevraag = "afbeelding";
+                console.log(typevraag);
+                $("#opendiv").hide();
+                $("#janeediv").hide();
+                $("#codediv").hide();
+                $("#meerkeuzediv").hide();
+                $("#afbeeldingdiv").show();
+            }
+        });
+      </script>
   </body>
 </html>

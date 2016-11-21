@@ -22,31 +22,9 @@
       <!-- Social buttons CSS -->
       <link href="css/bootstrap-social.css.css" rel="stylesheet">
   </head>
-
-    <script>
-        var RandomCode = localStorage.getItem('FilterRandomCode');
-        console.log(RandomCode);
-        
-        $(function(){
-            document.getElementById('RandomCode').innerHTML = RandomCode;
-        });
-        
-        var Lesnaam = localStorage.getItem('StorageLesNaam');  
-        var LesNaamFiltered = Lesnaam.slice(1,-1);
-        console.log(LesNaamFiltered);
-    </script>
            
-       
-
-    
-
-    
   <body ng-app="ApiCall" ng-cloak ng-controller="myCtrl">
       
-      <script>
-      </script>
-      
-
       <!-- Navigatie bar -->
       <nav class="navbar navbar-inverse">
 
@@ -73,7 +51,7 @@
         <div id="CenterPage" class="col-sm-12 text-center">
 
                 
-            <h1 id="RandomCode"/>
+            <h1 id="RandomCodeTag"/>
             <hr>
             <br>
             <br>
@@ -144,8 +122,23 @@
         </div>
       </div>
        
+      
+    <script>
+        var RandomCode = localStorage.getItem('FilterRandomCode');
+        
+        $(function(){
+            document.getElementById('RandomCodeTag').innerHTML = RandomCode;
+        });
+        
+        var Lesnaam = localStorage.getItem('StorageLesNaam');  
+        var LesNaamFiltered = Lesnaam.slice(1,-1);
+    </script>
+      
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        var RandomCode = localStorage.getItem('FilterRandomCode');
+        console.log(RandomCode);
+        
         var websock = io('/OERZNi0');
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope ,$http, $filter){
@@ -154,11 +147,9 @@
              $http({method: 'POST', url: "http://localhost/addquestion/Jan/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     console.log("User updated");
-                    websock.emit('chat message', $('#m').val());
+                    websock.emit('vraag', $('#m').val());
                     $('#m').val('');
                     websock.emit('typevraag', type);
-                    
-                  
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
               }); 
