@@ -73,7 +73,10 @@
         }); 
           
         var typevraag;
-        var socket = io('/OERZNi0');
+        var RandomCode = localStorage.getItem('inputCode');
+        var RandomFiltered = RandomCode.slice(1,-1);
+        console.log(RandomFiltered);
+        var socket = io("/" + RandomFiltered);
         socket.on('vraag', function(msg){
             $('#vragen').append($('<li>').text(msg));  
         });

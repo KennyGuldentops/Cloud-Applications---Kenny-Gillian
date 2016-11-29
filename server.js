@@ -1,6 +1,6 @@
 var express = require('express');
 var mongodb = require('mongodb'); 
-var database = require('./config/database'); 			// load the database config
+var database = require('./config/database');
 var morgan   = require('morgan');
 var randomstring = require("randomstring");
 var fs = require("fs");
@@ -9,6 +9,7 @@ var http = require('http');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 
 
 var bodyParser = require('body-parser')
@@ -68,27 +69,6 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
   next();
 });
 
-// socket met enkele room
-var nsp = io.of('/OERZNi0');
-nsp.on('connection', function(socket){
-  console.log('someone connected');
-    socket.on('vraag', function(msg){
-        nsp.emit('vraag', msg);
-        console.log('vraag: ' + msg);
-    });
-    socket.on('typevraag', function(type){
-        nsp.emit('typevraag', type);
-        console.log('typevraag: ' + type);
-    });
-    socket.on('antwoord', function(antwoord){
-        nsp.emit('antwoord', antwoord);
-        console.log('antwoord: ' + antwoord);
-    });
-    socket.on('disconnect', function(){
-        console.log('someone disconnected');
-    });
-});
-
 fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
 });
@@ -119,35 +99,27 @@ datani = JSON.parse( data );
 
 app.get('/randomcode', function (req, res) {
         //Socket
-    
-    
-    
     var RandomRoomCode = randomstring.generate(7);
-    /*var socketConnection = io.of('/'+RandomRoomCode);
-    console.log("Someone made a room with code: " + RandomRoomCode);
-       socketConnection.on('connection', function(socket){
-        socket.join(RandomRoomCode);
-       });
-    */
     
-    /*var nsp = io.of('/' + RandomRoomCode);
-nsp.on('connection', function(socket){
-  console.log('someone connected');
-    socket.on('chat message', function(msg){
-        nsp.emit('chat message', msg);
-        console.log('message: ' + msg);
+    var nsp = io.of('/'+RandomRoomCode);
+        nsp.on('connection', function(socket){
+        console.log('someone connected to room: ' + RandomRoomCode);
+        socket.on('vraag', function(msg){
+        nsp.emit('vraag', msg);
+        console.log('vraag: ' + msg);
     });
     socket.on('typevraag', function(type){
-         nsp.emit('typevraag', type);
-        console.log('typevraag: '+type);
+        nsp.emit('typevraag', type);
+        console.log('typevraag: ' + type);
+    });
+    socket.on('antwoord', function(antwoord){
+        nsp.emit('antwoord', antwoord);
+        console.log('antwoord: ' + antwoord);
     });
     socket.on('disconnect', function(){
-        console.log('someone disconnected');
+        console.log('someone disconnected from room: ' + RandomRoomCode);
     });
-});*/
-
-    
-    
+});
     res.json(RandomRoomCode);
 });
 
@@ -307,6 +279,10 @@ app.post('/addquestion/:naam/:lesnaam/:vraag', function (req, res) {
         
         
 });
+
+
+//auth
+
 
 ////////////////////////////////// USER MAKEN EN LES MAKEN APPART/////////////////////////////////////////
 

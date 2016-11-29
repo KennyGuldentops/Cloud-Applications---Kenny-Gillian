@@ -136,27 +136,34 @@
       
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var RandomCode = localStorage.getItem('FilterRandomCode');
-        console.log(RandomCode);
         
-        var websock = io('/OERZNi0');
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope ,$http, $filter){
             
+        var RandomCode = localStorage.getItem('FilterRandomCode');
+        var RandomFiltered = RandomCode.slice(1,-1);
+        console.log(RandomFiltered);
+        var socket = io("/" + RandomFiltered);
         $scope.addVraag = function() {
              $http({method: 'POST', url: "http://localhost/addquestion/Jan/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     console.log("User updated");
-                    websock.emit('vraag', $('#m').val());
+                    socket.emit('vraag', $('#m').val());
                     $('#m').val('');
-                    websock.emit('typevraag', type);
+                    socket.emit('typevraag', type);
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
               }); 
         }
+        $scope.$on('$viewContentLoaded', function(){
+        
+            
+       
+            
+        })
         }); 
     </script>
-      <script>
+      <script>                  
         var type;
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();

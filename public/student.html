@@ -32,7 +32,7 @@
             var timer = setTimeout(function() {
                 window.location="/collectVragen.html"
             }, 100);
-            var socket = io('/'+$scope.code);
+            
             localStorage.setItem('inputCode', JSON.stringify($scope.code)); 
         }
         });
