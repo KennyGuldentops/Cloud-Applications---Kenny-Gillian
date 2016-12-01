@@ -23,18 +23,47 @@
       <link href="css/bootstrap-social.css.css" rel="stylesheet">
   </head>
 
-  <body>
-      <ul id="vragen"></ul>
+  <body ng-app="myApp" ng-cloak ng-controller="myCtrl">
+      <nav class="navbar navbar-inverse">
+
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/index.html">Interactive Courses</a>
+        </div>
+    
+        <div class="containter">
+            <ul class="nav navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/features.html">Features</a>
+                </li>
+            </ul>
+          </div>
+
+        </nav>
+      <ul id="vragen" class="list-group">
+        <li class="list-group-item">New <span class="badge">12</span></li>
+        <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="backvragen()" >Start les</button>
+      </ul>
       
       <script src="/socket.io/socket.io.js"></script>
       <script>
+          var app = angular.module('myApp', []);
+          app.controller("myCtrl", function($scope ,$http, $filter){
+          $scope.backvragen = function() {
+              
+              var timer = setTimeout(function() {
+                        window.location="/teacherVragen.html"
+                    }, 100);
+          }
+          
         var RandomCode = localStorage.getItem('FilterRandomCode');
         var RandomFiltered = RandomCode.slice(1,-1);
         console.log(RandomFiltered);
         var socket = io("/" + RandomFiltered);
         socket.on('antwoord', function(msg){
-            $('#vragen').append($('<li>').text(msg));
+            $('#vragen').append($('<li class="list-group-item">').text(msg));
       });
+        });
+          
       </script>
      
   </body>

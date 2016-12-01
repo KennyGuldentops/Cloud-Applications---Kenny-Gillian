@@ -96,23 +96,57 @@ app.get('/push', function (req, res) {
 fs.readFile( __dirname + "/" + "lijstje.json", 'utf8', function (err, data) {
 datani = JSON.parse( data );
 });
+var currentvragen = [
+        {"vraag":"hallo ?", "type":"open", "id":"12345"},  
+        {"vraag":"hallo oke ?", "type":"OpenVraag", "id":"54321"}
+];
 
 app.get('/randomcode', function (req, res) {
         //Socket
     var RandomRoomCode = randomstring.generate(7);
     
     var nsp = io.of('/'+RandomRoomCode);
-        nsp.on('connection', function(socket){
-        console.log('someone connected to room: ' + RandomRoomCode);
-        socket.on('vraag', function(msg){
+        nsp.on('connection',  function(socket){
+        var socketid = socket.id;
+        console.log('someone connected to room: ' + RandomRoomCode + ' '+ socketid);
+        for (var i = 0; i < currentvragen.length; i++) {
+            if(currentvragen[i].id == RandomRoomCode){
+                nsp.to(socketid).emit('vraag', currentvragen[i].vraag);
+                nsp.to(socketid).emit('typevraag', currentvragen[i].type);
+            }  
+        }
+        
+    socket.on('vraag', function(msg){
+        
+        for (var i = 0; i < currentvragen.length; i++) {
+            if(currentvragen[i].id == RandomRoomCode){
+               
+                currentvragen[i].vraag = msg;
+            }
+            else{
+                var element = {};
+                element.vraag = msg;
+                element.type = "casdcasn";
+                element.id = RandomRoomCode;
+                currentvragen.push(element)
+            }
+        }
+        
         nsp.emit('vraag', msg);
         console.log('vraag: ' + msg);
     });
     socket.on('typevraag', function(type){
+        for (var i = 0; i < currentvragen.length; i++) {
+            if(currentvragen[i].id == RandomRoomCode){
+                currentvragen[i].type = type;
+                console.log(currentvragen[i]);
+            }
+        }
         nsp.emit('typevraag', type);
         console.log('typevraag: ' + type);
     });
     socket.on('antwoord', function(antwoord){
+        
         nsp.emit('antwoord', antwoord);
         console.log('antwoord: ' + antwoord);
     });

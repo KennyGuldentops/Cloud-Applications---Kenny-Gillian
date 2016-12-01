@@ -40,7 +40,7 @@
             </ul>
           </div>
 
-        </nav>
+      </nav>
         
         <!-- Content -->
         
@@ -145,6 +145,10 @@
         console.log(RandomFiltered);
         var socket = io("/" + RandomFiltered);
         $scope.addVraag = function() {
+            
+            
+            
+                
              $http({method: 'POST', url: "http://localhost/addquestion/Jan/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     console.log("User updated");
@@ -154,6 +158,9 @@
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
               }); 
+                var timer = setTimeout(function() {
+                        window.location="/collectAntwoorden.html"
+                    }, 100);
         }
         $scope.$on('$viewContentLoaded', function(){
         
