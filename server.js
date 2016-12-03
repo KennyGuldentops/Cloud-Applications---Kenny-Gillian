@@ -1,6 +1,7 @@
+////////////////////////////////////////////// Requires and variables 
 var express = require('express');
 var mongodb = require('mongodb'); 
-var database = require('./config/database');
+var database = require('./config/database'); 
 var morgan   = require('morgan');
 var randomstring = require("randomstring");
 var fs = require("fs");
@@ -9,52 +10,11 @@ var http = require('http');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
-
-
 var bodyParser = require('body-parser')
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
-
-var port  	 = process.env.PORT || 80;
-
-var datani;
-var indatabase;
-var indatabaselesnaam;
- 
-//////////////////MONGO WEG VOOR LOKAAL 
-// configuration 
-var newjson;
-var MongoClient = mongodb.MongoClient;
-MongoClient.connect(database.url, function (err, db) {
-  if (err) {
-    console.log('Unable to connect to the mongoDB server. Error:', err);
-  } else {
-    console.log('pulling jsonfile');
-      var collection = db.collection("dummyDB");
-       db.collection('dummyDB').find({}).toArray( function(err, json){
-    if(err){
-        console.log(err);
-   
-    }
-    else{
-        console.log(json);
-        json.forEach(function(doc) {
-                console.log("Doc from Array ");
-                newjson = JSON.stringify(doc);
-                delete newjson["id"];
-                console.log(newjson);
-        })
-        
-    }
-});
-  }       
-});         
-
-//mongoose.connect(database.url); 	// connect to mongoDB database on modulus.io
-
 
 app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
@@ -69,42 +29,69 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
   next();
 });
 
-fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {
-datani = JSON.parse( data );
-});
+var port  	 = process.env.PORT || 80;
+var datani;
+var indatabase;
+var indatabaselesnaam;
+var newjson;
+var MongoClient = mongodb.MongoClient;
+var array = [];
 
+
+
+
+//////////////////////////////pulls data out file
+
+fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {datani = JSON.parse( data );});
+
+app.get('/heeljson', function (req, res) {	
+			res.json(datani);
+            console.log(datani);
+});
 
 app.get('/push', function (req, res) {
-    fs.writeFile( __dirname + "/" + "lijstje2.json",newjson , 'utf8', function (err, data) {
-
-});
-    
-   MongoClient.connect(database.url, function (err, db) {
-  if (err) {
-    console.log('Unable to connect to the mongoDB server. Error:', err);
-  } else {
-    //HURRAY!! We are connected. :)
-    console.log('Connection established to');
-      var collection = db.collection("dummyDB");
-        collection.remove({}, function (err, remove) {});
-      collection.insert(datani, function(err, doc) {if(err) throw err;});
+    MongoClient.connect(database.url, function (err, db) {
+    if (err) {
+        console.log('Unable to connect to the mongoDB server. Error:', err);
+      } else {
+          console.log('OK pushing to database ');
+          res.json("pushed to database");
+          var collection = db.collection("dummyDB");
+          collection.remove({}, function (err, remove) {});
+          collection.insert(datani, function(err, doc) {if(err) throw err;});
   }       
 });                   
 });
 
-// API 
-fs.readFile( __dirname + "/" + "lijstje.json", 'utf8', function (err, data) {
-datani = JSON.parse( data );
+app.get('/pull', function (req, res) {		 
+			MongoClient.connect(database.url, function (err, db) {if (err) {console.log('Unable to connect to the mongoDB server. Error:', err);} 
+                else {
+                    console.log('Connected ready for pull');
+                    var collection = db.collection("dummyDB");
+                    db.collection('dummyDB').find({}).toArray( function(err, json){
+                        if(err){console.log(err);}
+                        else{
+                            console.log('pulling json writing to file');
+                            res.json("pulled from database");
+                            json.forEach(function(doc) {
+                            datani = JSON.stringify(doc);
+                            console.log(datani);
+                            fs.writeFile( __dirname + "/" + "lijstje2.json",datani , 'utf8', function (err, data) {});
+                            fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {datani = JSON.parse( data );});
+                            })
+                        }
+                    });
+                    }       
+            });      
 });
+
 var currentvragen = [
         {"vraag":"hallo ?", "type":"open", "id":"12345"},  
         {"vraag":"hallo oke ?", "type":"OpenVraag", "id":"54321"}
 ];
 
 app.get('/randomcode', function (req, res) {
-        //Socket
     var RandomRoomCode = randomstring.generate(7);
-    
     var nsp = io.of('/'+RandomRoomCode);
         nsp.on('connection',  function(socket){
         var socketid = socket.id;
@@ -157,13 +144,7 @@ app.get('/randomcode', function (req, res) {
     res.json(RandomRoomCode);
 });
 
-
-app.get('/heeljson', function (req, res) {		 
-			res.json( datani);
-            console.log(datani);
-});
-
-    
+  
 
 app.get('/zoek/:naam', function (req, res) {
 
@@ -189,13 +170,10 @@ app.get('/zoek/:naam', function (req, res) {
 });
 
 app.get('/zoekles/:naam/:lesnaam', function (req, res) {
-
         indatabase = false;
         indatabaselesnaam = false;
         
         for (var i = 0; i < datani.users.length; i++) {
-                
-
                 if (datani.users[i].naam == req.params.naam) {
                     
                     console.log(req.params.naam+" is in de database");   // naam is in database
@@ -205,8 +183,8 @@ app.get('/zoekles/:naam/:lesnaam', function (req, res) {
                             if (datani.users[i].Lessen[x].naam == req.params.lesnaam) {
                                 indatabaselesnaam = true;
                                 console.log(req.params.lesnaam+" is in de database");
-                                console.log(datani.users[i].Lessen[x]); 
-                                res.json(datani.users[i].Lessen[x]);
+                                console.log(datani.users[i].Lessen[x].vragen); 
+                                res.json(datani.users[i].Lessen[x].vragen);
                                 break;
                             }
                         }
@@ -223,17 +201,45 @@ app.get('/zoekles/:naam/:lesnaam', function (req, res) {
         {
             console.log("les is niet in database")
             res.json("les is niet niet in database");
-        } 
-        
+        }   
+});
+
+app.get('/probleemvragen/:naam/:lesnaam', function (req, res) {
+    
+   
+    array = [];
+    for (var i = 0; i < datani.users.length; i++) {
+                if (datani.users[i].naam == req.params.naam) {
+                    console.log(req.params.naam+" is in de database");   // naam is in database
+                        for (var x = 0; x < datani.users[i].Lessen.length; x++) {
+                            if (datani.users[i].Lessen[x].naam == req.params.lesnaam) {
+                                indatabaselesnaam = true;
+                                console.log(req.params.lesnaam+" is in de database");
+                                for (var y = 0; y < datani.users[i].Lessen[x].vragen.length; y++) {
+                                    if(datani.users[i].Lessen[x].vragen[y].probleemvraag === "true"){
+                                        array.push(datani.users[i].Lessen[x].vragen[y].vraag);
+                                        
+                                    }
+                                }
+                                console.log(array);
+                                res.json(array);
+                                break;
+                            }
+                        }
+                    
+                    break;
+                }
+        }
+    
+    
 });
 
 
 app.post('/adduser/:naam', function (req, res) {
-
+    
+             console.log(datani)
         indatabase = false;
         for (var i = 0; i < datani.users.length; i++) {
-                
-
                 if (datani.users[i].naam == req.params.naam) {
                     
                     console.log("User is al in database");
@@ -313,10 +319,6 @@ app.post('/addquestion/:naam/:lesnaam/:vraag', function (req, res) {
         
         
 });
-
-
-//auth
-
 
 ////////////////////////////////// USER MAKEN EN LES MAKEN APPART/////////////////////////////////////////
 

@@ -115,6 +115,9 @@
                 <br>
                 <button ng-click="addVraag()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
                 <button type="button" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
+            <ul class="list-group">
+                      <li class="list-group-item" ng-repeat="item in items track by $index">{{item}}</li>
+                </ul>
           </div>
       
 
@@ -139,16 +142,28 @@
         
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope ,$http, $filter){
-            
+        $http({method: 'GET', url: "http://localhost/probleemvragen/Jan/"+LesNaamFiltered}).then(
+                function successCallback(response) {
+                    $scope.todoList = [];
+                    for (var i = 0; i < response.data.length; i++) {
+                        console.log(response.data[i])
+                        $scope.items = response.data;
+                        $scope.add = function(item) {
+                            $scope.items.push(item);
+                        };
+                       
+                    }
+
+                    
+                }, function errorCallback(response) {
+                    console.log("error pullen van probleemvraag");
+              });     
         var RandomCode = localStorage.getItem('FilterRandomCode');
         var RandomFiltered = RandomCode.slice(1,-1);
         console.log(RandomFiltered);
         var socket = io("/" + RandomFiltered);
+            
         $scope.addVraag = function() {
-            
-            
-            
-                
              $http({method: 'POST', url: "http://localhost/addquestion/Jan/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     console.log("User updated");
