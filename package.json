@@ -1,16 +1,18 @@
 {
-  "name"         : "CAKG",
-  "version"      : "1.0.0",
-  "description"  : "Cloud application Collaboratie tool",
-  "main"         : "server.js",
-  "author"       : "Kenny en Gillian",
-  "dependencies" : {
-    "express"         : "~4.6.1",
-    "mongodb"        : "~2.2.11",
-    "morgan"          : "~1.1.1",
-    "body-parser"     : "~1.4.3",
-    "method-override" : "~2.1.1",
-    "randomstring"    : "~1.1.5",
-    "socket.io"       : "~1.5.1"  
+  "name": "CAKG",
+  "version": "1.0.0",
+  "description": "Cloud application Collaboratie tool",
+  "main": "server.js",
+  "author": "Kenny en Gillian",
+  "dependencies": {
+    "body-parser": "~1.4.3",
+    "express": "~4.6.1",
+    "method-override": "~2.1.1",
+    "mongodb": "~2.2.11",
+    "morgan": "~1.1.1",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "randomstring": "~1.1.5",
+    "socket.io": "~1.5.1"
   }
 }

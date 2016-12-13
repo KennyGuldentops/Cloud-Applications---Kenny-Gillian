@@ -11,10 +11,36 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser')
+var express = require('express');
+var passport = require('passport');
+var Strategy = require('passport-facebook').Strategy;
+
+passport.use(new Strategy({
+    clientID: '160901634379580',
+    clientSecret: '2a42f07d85f26fcad2a937c115828bc7',
+    callbackURL: 'http://localhost:80/login/facebook/return'
+  },
+function(accessToken, refreshToken, profile, cb) {
+    return cb(null, profile);
+  }));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function(obj, cb) {
+  cb(null, obj);
+});
+
+
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
+
+
 
 app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
@@ -36,7 +62,8 @@ var indatabaselesnaam;
 var newjson;
 var MongoClient = mongodb.MongoClient;
 var array = [];
-
+var UserID;
+var UserDisplayName;
 
 
 
@@ -264,7 +291,7 @@ app.post('/adduser/:naam', function (req, res) {
              console.log(datani)
         indatabase = false;
         for (var i = 0; i < datani.users.length; i++) {
-                if (datani.users[i].naam == req.params.naam) {
+                if (datani.users[i].naam == req.prams.naam) {
                     
                     console.log("User is al in database");
                     res.json("User is al in database");
@@ -334,7 +361,24 @@ app.post('/addquestion/:naam/:lesnaam/:vraag', function (req, res) {
                 }
         }
         if(!indatabase){
-            
+            console.log("In de database gestoken");
+                            var newuser =
+                            {
+                                "naam":req.params.naam, 
+                                  "Lessen" : 
+                                    [{
+                                      "naam":req.params.lesnaam,
+                                      "vragen" : 
+                                      [{
+                                           "vraag":req.params.vraag,
+                                           "id":"0",
+                                           "probleemvraag":"false"
+                                       }]
+                                  }]
+                            }
+                            datani.users.push(newuser);
+                            console.log(datani.users);
+                            res.json(datani.users);
                                
             
         }
@@ -369,6 +413,30 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
         }  
 });
 ////////////////////////////////// USER MAKEN EN LES MAKEN APPART/////////////////////////////////////////
+
+
+//auth
+
+app.get('/login/facebook',
+  passport.authenticate('facebook'));
+
+
+    
+
+app.get('/login/facebook/return', 
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/teacherOverzicht.html');
+    UserID = req.user.id;
+    UserDisplayName = req.user.displayName;
+  });
+
+app.get('/profileInfo', function(req, res){
+    var User = UserID + UserDisplayName;
+    res.json(User);
+    
+});
+
 
 /*
 app.delete('/delete/:naam', function (req, res) {

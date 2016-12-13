@@ -44,7 +44,7 @@
         
         <!-- Content -->
         
-      <div class="container-fluid text-center">
+      <div data-ng-init="getProfile()" class="container-fluid text-center">
       <div class="row content">
 
       
@@ -139,10 +139,11 @@
       
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        var user;
         
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope ,$http, $filter){
-        $http({method: 'GET', url: "http://localhost/probleemvragen/Jan/"+LesNaamFiltered}).then(
+        $http({method: 'GET', url: "http://localhost/probleemvragen/"+user+"/"+LesNaamFiltered}).then(
                 function successCallback(response) {
                     $scope.todoList = [];
                     for (var i = 0; i < response.data.length; i++) {
@@ -164,7 +165,7 @@
         var socket = io("/" + RandomFiltered);
             
         $scope.addVraag = function() {
-             $http({method: 'POST', url: "http://localhost/addquestion/Jan/"+LesNaamFiltered+"/"+$scope.addMe
+             $http({method: 'POST', url: "http://localhost/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
                     console.log("User updated");
@@ -178,12 +179,19 @@
                         window.location="/collectAntwoorden.html"
                     }, 100);
         }
-        $scope.$on('$viewContentLoaded', function(){
         
-            
-       
-            
-        })
+        $scope.getProfile = function(){
+            $http({
+              method: 'GET',
+              url: '/profileInfo'
+            }).then(function successCallback(response) {
+                user = response.data;
+                console.log(user);
+              }, function errorCallback(response) {
+                
+              });
+        };
+        
         }); 
     </script>
       <script>                  
