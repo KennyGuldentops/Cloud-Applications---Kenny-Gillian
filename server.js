@@ -89,6 +89,10 @@ var currentvragen = [
         {"vraag":"hallo ?", "type":"open", "id":"12345"},  
         {"vraag":"hallo oke ?", "type":"OpenVraag", "id":"54321"}
 ];
+var idray = [
+        {"socketids":"15616"},  
+        {"socketids":"15648"}
+];
 
 app.get('/randomcode', function (req, res) {
     var RandomRoomCode = randomstring.generate(7);
@@ -126,19 +130,39 @@ app.get('/randomcode', function (req, res) {
         for (var i = 0; i < currentvragen.length; i++) {
             if(currentvragen[i].id == RandomRoomCode){
                 currentvragen[i].type = type;
-                console.log(currentvragen[i]);
+
             }
         }
         nsp.emit('typevraag', type);
         console.log('typevraag: ' + type);
     });
     socket.on('antwoord', function(antwoord){
+        var answerd = false;
+        for (var i = 0; i < idray.length; i++) {
+              
+            if(idray[i].socketids == socket.id){
+                answerd = true;
+            }
+            
+        }
+        if(answerd == true){
+             console.log("already answerd"); 
+        }
+        else{
+            nsp.emit('antwoord', antwoord);
+            console.log('antwoord: ' + antwoord);  
+            var element = {};
+                element.socketids = socket.id;
+                idray.push(element)
+        }
         
-        nsp.emit('antwoord', antwoord);
-        console.log('antwoord: ' + antwoord);
     });
     socket.on('disconnect', function(){
         console.log('someone disconnected from room: ' + RandomRoomCode);
+    });
+    socket.on('close', function(){
+        nsp.disconnect();
+        console.log('socket closed: ' + RandomRoomCode);
     });
 });
     res.json(RandomRoomCode);
@@ -306,8 +330,6 @@ app.post('/addquestion/:naam/:lesnaam/:vraag', function (req, res) {
                       res.json(datani.users[i].Lessen[x]);  
                 
                     }
-                    
-                    console.log(datani.users[i].Lessen)
                     break;
                 }
         }
@@ -320,6 +342,32 @@ app.post('/addquestion/:naam/:lesnaam/:vraag', function (req, res) {
         
 });
 
+app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
+        for (var i = 0; i < datani.users.length; i++) {
+                if (datani.users[i].naam == req.params.naam) {
+                    for (var x = 0; x < datani.users[i].Lessen.length; x++) {
+                                    if (datani.users[i].Lessen[x].naam == req.params.lesnaam) {
+                                         for (var y = 0; y < datani.users[i].Lessen[x].vragen.length; x++) {    
+                                             if (datani.users[i].Lessen[x].vragen[y].vraag == req.params.vraag) {
+                                                if(req.params.bool == 'true'){
+                                                    datani.users[i].Lessen[x].vragen[y].probleemvraag = "true"
+                                                }
+                                                if(req.params.bool == 'false'){
+                                                    datani.users[i].Lessen[x].vragen[y].probleemvraag = "false"
+                                                }
+                                                 res.json("de boolean is: " +datani.users[i].Lessen[x].vragen[y].probleemvraag)
+                                             }
+                                             break;
+                                         }
+                                        break;
+                                    }
+                    }
+                    break;
+                }
+        }
+        if(!indatabase){  
+        }  
+});
 ////////////////////////////////// USER MAKEN EN LES MAKEN APPART/////////////////////////////////////////
 
 /*

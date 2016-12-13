@@ -166,6 +166,7 @@
         $scope.addVraag = function() {
              $http({method: 'POST', url: "http://localhost/addquestion/Jan/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
+                    localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
                     console.log("User updated");
                     socket.emit('vraag', $('#m').val());
                     $('#m').val('');

@@ -40,29 +40,66 @@
 
         </nav>
       <ul id="vragen" class="list-group">
-        <li class="list-group-item">New <span class="badge">12</span></li>
-        <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="backvragen()" >Start les</button>
+        
       </ul>
       
+      <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="backvragen()" >Nieuwe vraag</button>
+      <button  class="btn btn-default" ng-click="closesocket()" >Einde sessie</button>
+      <button  class="btn btn-default" ng-click="probleemvraag()" >Probleemvraag</button>
+      <input type="checkbox" />Checkbox<br/>
+            <span id="result"></span>
+            <script type="text/javascript">
+           
+            </script>
       <script src="/socket.io/socket.io.js"></script>
       <script>
-          var app = angular.module('myApp', []);
-          app.controller("myCtrl", function($scope ,$http, $filter){
-          $scope.backvragen = function() {
-              
-              var timer = setTimeout(function() {
-                        window.location="/teacherVragen.html"
-                    }, 100);
-          }
+            var Lesnaam = localStorage.getItem('StorageLesNaam');  
+            var noquestionmark = Lesnaam.slice(1,-1);
+            var LesNaamFiltered = noquestionmark.replace('?', '');
+            var LesVraag = localStorage.getItem('StorageVraag');
+            var removequestion = LesVraag.slice(1,-1);
+            var LesVraagFilterd = removequestion.replace('?', '');
+            var boolcheck;
           
-        var RandomCode = localStorage.getItem('FilterRandomCode');
-        var RandomFiltered = RandomCode.slice(1,-1);
-        console.log(RandomFiltered);
-        var socket = io("/" + RandomFiltered);
-        socket.on('antwoord', function(msg){
-            $('#vragen').append($('<li class="list-group-item">').text(msg));
-      });
-        });
+            window.onload = function () {
+                var input = document.querySelector('input[type=checkbox]');
+
+                function check() {
+                    boolcheck = input.checked ? "true" : "false";
+                }
+                input.onchange = check;
+                check();
+            }
+             
+            var app = angular.module('myApp', []);
+            app.controller("myCtrl", function($scope ,$http, $filter){
+            $scope.backvragen = function() {
+              var timer = setTimeout(function() {
+                        window.location="/teacherVragen.html"}, 100);
+            }
+            $scope.closesocket = function() {
+                var socket = io("/" + RandomFiltered);
+                console.log("socketclosin") 
+                socket.emit('close');
+            }
+            $scope.probleemvraag = function() {
+                $http({method: 'POST', url: "http://localhost/Probleemvraag/Jan/"+LesNaamFiltered+"/"+LesVraagFilterd+"/"+boolcheck
+                  }).then(function successCallback(response) {
+                    console.log(response);
+                    
+                }, function errorCallback(response) {
+                    console.log("error met deze user te updaten");
+              }); 
+            };
+          
+            var RandomCode = localStorage.getItem('FilterRandomCode');
+            var RandomFiltered = RandomCode.slice(1,-1);
+            console.log(RandomFiltered);
+            var socket = io("/" + RandomFiltered);
+            socket.on('antwoord', function(msg){
+                $('#vragen').append($('<li class="list-group-item">').text(msg));
+            });
+            });
           
       </script>
      
