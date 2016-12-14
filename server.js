@@ -188,7 +188,7 @@ app.get('/randomcode', function (req, res) {
         console.log('someone disconnected from room: ' + RandomRoomCode);
     });
     socket.on('close', function(){
-        nsp.disconnect();
+        socket.disconnect();
         console.log('socket closed: ' + RandomRoomCode);
     });
 });

@@ -26,7 +26,7 @@
   <body ng-app="myApp" ng-cloak ng-controller="myCtrl">
       <nav class="navbar navbar-inverse">
 
-        <div class="navbar-header">
+        <div data-ng-init="getProfile()" class="navbar-header">
             <a class="navbar-brand" href="/index.html">Interactive Courses</a>
         </div>
     
@@ -60,6 +60,7 @@
             var removequestion = LesVraag.slice(1,-1);
             var LesVraagFilterd = removequestion.replace('?', '');
             var boolcheck;
+            var user;
           
             window.onload = function () {
                 var input = document.querySelector('input[type=checkbox]');
@@ -83,7 +84,7 @@
                 socket.emit('close');
             }
             $scope.probleemvraag = function() {
-                $http({method: 'POST', url: "http://localhost/Probleemvraag/Jan/"+LesNaamFiltered+"/"+LesVraagFilterd+"/"+boolcheck
+                $http({method: 'POST', url: "http://localhost/Probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/"+boolcheck
                   }).then(function successCallback(response) {
                     console.log(response);
                     
@@ -91,6 +92,18 @@
                     console.log("error met deze user te updaten");
               }); 
             };
+            $scope.getProfile = function(){
+            $http({
+                  method: 'GET',
+                  url: '/profileInfo'
+                }).then(function successCallback(response) {
+                    user = response.data;
+                    console.log(user);
+                  }, function errorCallback(response) {
+
+                  });
+              };    
+            
           
             var RandomCode = localStorage.getItem('FilterRandomCode');
             var RandomFiltered = RandomCode.slice(1,-1);
