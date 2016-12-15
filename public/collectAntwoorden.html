@@ -84,7 +84,8 @@
                 socket.emit('close');
             }
             $scope.probleemvraag = function() {
-                $http({method: 'POST', url: "http://localhost/Probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/"+boolcheck
+                console.log("test");
+                $http({method: 'POST', url: "http://localhost/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/"+boolcheck
                   }).then(function successCallback(response) {
                     console.log(response);
                     
@@ -110,7 +111,7 @@
             console.log(RandomFiltered);
             var socket = io("/" + RandomFiltered);
             socket.on('antwoord', function(msg){
-                $('#vragen').append($('<li class="list-group-item">').text(msg));
+                $('#vragen').append($('<li class="list-group-item">').text(msg.vraag));
             });
             });
           

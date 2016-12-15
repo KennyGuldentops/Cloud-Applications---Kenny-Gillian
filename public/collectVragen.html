@@ -67,6 +67,7 @@
 
 
         <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+        <input type="checkbox" />Moeilijk ?<br/>
         
       <script src="/socket.io/socket.io.js"></script>
       <script>
@@ -79,11 +80,23 @@
           
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope){ 
-            $scope.addAnswer = function() {
-              socket.emit('antwoord', $('#m').val());
+        $scope.addAnswer = function(){
+              socket.emit('antwoord', { vraag: $('#m').val(), bool: boolcheck });
               $('#m').val('');
-        }
+              console.log('send');}
+        
         }); 
+           window.onload = function () {
+                var input = document.querySelector('input[type=checkbox]');
+
+                function check() {
+                    boolcheck = input.checked ? "true" : "false";
+                }
+                input.onchange = check;
+                check();
+            };
+          
+          
           
         var typevraag;
         var RandomCode = localStorage.getItem('inputCode');

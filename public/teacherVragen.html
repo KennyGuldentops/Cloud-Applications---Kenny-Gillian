@@ -45,7 +45,7 @@
         <!-- Content -->
         
       <div data-ng-init="getProfile()" class="container-fluid text-center">
-      <div class="row content">
+      <div data-ng-init="getProbleemvragen()" class="row content">
 
       
         <div id="CenterPage" class="col-sm-12 text-center">
@@ -143,26 +143,25 @@
         
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope ,$http, $filter){
-        $http({method: 'GET', url: "http://localhost/probleemvragen/"+user+"/"+LesNaamFiltered}).then(
-                function successCallback(response) {
-                    $scope.todoList = [];
-                    for (var i = 0; i < response.data.length; i++) {
-                        console.log(response.data[i])
-                        $scope.items = response.data;
-                        $scope.add = function(item) {
-                            $scope.items.push(item);
-                        };
-                       
-                    }
-
-                    
-                }, function errorCallback(response) {
-                    console.log("error pullen van probleemvraag");
-              });     
+        
         var RandomCode = localStorage.getItem('FilterRandomCode');
         var RandomFiltered = RandomCode.slice(1,-1);
         console.log(RandomFiltered);
         var socket = io("/" + RandomFiltered);
+        
+        $scope.getProfile = function(){
+            $http({
+              method: 'GET',
+              url: '/profileInfo'
+            }).then(function successCallback(response) {
+                user = response.data;
+                console.log(user);
+              }, function errorCallback(response) {
+                console.log("cannot get profileinfo");
+              });
+        };
+            
+                
             
         $scope.addVraag = function() {
              $http({method: 'POST', url: "http://localhost/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
@@ -178,20 +177,23 @@
                 var timer = setTimeout(function() {
                         window.location="/collectAntwoorden.html"
                     }, 100);
-        }
-        
-        $scope.getProfile = function(){
-            $http({
-              method: 'GET',
-              url: '/profileInfo'
-            }).then(function successCallback(response) {
-                user = response.data;
-                console.log(user);
-              }, function errorCallback(response) {
-                
-              });
         };
-        
+      
+        var timer = setTimeout(function() {
+            $http({method: 'GET', url: "http://localhost/probleemvragen/"+user+"/"+LesNaamFiltered}).then(
+                function successCallback(response) {
+                    $scope.todoList = [];
+                    for (var i = 0; i < response.data.length; i++) {
+                        console.log(response.data[i])
+                        $scope.items = response.data;
+                        $scope.add = function(item) {
+                            $scope.items.push(item);
+                        };         
+                    }
+                }, function errorCallback(response) {
+                    console.log("error pullen van probleemvraag");
+              });     
+            }, 100);
         }); 
     </script>
       <script>                  
@@ -241,8 +243,6 @@
             $("#AfbeeldingVraag").show();
             type = "afbeelding";
         });
-         
-       
     </script>
       
   </body>

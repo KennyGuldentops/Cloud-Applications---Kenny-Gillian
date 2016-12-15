@@ -13,13 +13,14 @@ var io = require('socket.io')(http);
 var bodyParser = require('body-parser')
 var express = require('express');
 var passport = require('passport');
-var Strategy = require('passport-facebook').Strategy;
+var FacebookAuth = require('passport-facebook').Strategy;
 
-passport.use(new Strategy({
+
+passport.use(new FacebookAuth({
     clientID: '160901634379580',
     clientSecret: '2a42f07d85f26fcad2a937c115828bc7',
     callbackURL: 'http://localhost:80/login/facebook/return'
-  },
+  },              
 function(accessToken, refreshToken, profile, cb) {
     return cb(null, profile);
   }));
@@ -31,7 +32,7 @@ passport.serializeUser(function(user, cb) {
 passport.deserializeUser(function(obj, cb) {
   cb(null, obj);
 });
-
+              
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -391,7 +392,7 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
                 if (datani.users[i].naam == req.params.naam) {
                     for (var x = 0; x < datani.users[i].Lessen.length; x++) {
                                     if (datani.users[i].Lessen[x].naam == req.params.lesnaam) {
-                                         for (var y = 0; y < datani.users[i].Lessen[x].vragen.length; x++) {    
+                                         for (var y = 0; y < datani.users[i].Lessen[x].vragen.length; y++) {    
                                              if (datani.users[i].Lessen[x].vragen[y].vraag == req.params.vraag) {
                                                 if(req.params.bool == 'true'){
                                                     datani.users[i].Lessen[x].vragen[y].probleemvraag = "true"
@@ -401,12 +402,12 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
                                                 }
                                                  res.json("de boolean is: " +datani.users[i].Lessen[x].vragen[y].probleemvraag)
                                              }
-                                             break;
+                                             
                                          }
                                         break;
                                     }
                     }
-                    break;
+                    
                 }
         }
         if(!indatabase){  
@@ -417,11 +418,9 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
 
 //auth
 
+//facebook
 app.get('/login/facebook',
   passport.authenticate('facebook'));
-
-
-    
 
 app.get('/login/facebook/return', 
   passport.authenticate('facebook', { failureRedirect: '/login' }),
