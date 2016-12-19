@@ -165,25 +165,12 @@ app.get('/randomcode', function (req, res) {
         console.log('typevraag: ' + type);
     });
     socket.on('antwoord', function(antwoord){
-        var answerd = false;
-        for (var i = 0; i < idray.length; i++) {
-              
-            if(idray[i].socketids == socket.id){
-                answerd = true;
-            }
-            
-        }
-        if(answerd == true){
-             console.log("already answerd"); 
-        }
-        else{
+        
             nsp.emit('antwoord', antwoord);
             console.log('antwoord: ' + antwoord);  
             var element = {};
                 element.socketids = socket.id;
-                idray.push(element)
-        }
-        
+   
     });
             
     socket.on('user image', function(image){
@@ -335,7 +322,7 @@ app.post('/addquestion/:naam/:lesnaam/:vraag', function (req, res) {
                     for (var x = 0; x < datani.users[i].Lessen.length; x++) {
                                     if (datani.users[i].Lessen[x].naam == req.params.lesnaam) {
                                         indatabaselesnaam = true;
-
+                                        
                                         var newvraag =
 
                                             {
@@ -343,8 +330,18 @@ app.post('/addquestion/:naam/:lesnaam/:vraag', function (req, res) {
                                                       "id":"0",
                                                       "probleemvraag":"false"
                                              }
-
-                                        datani.users[i].Lessen[x].vragen.push(newvraag);
+                                        
+                                        
+                                        
+                                        for (var s = 0; s < datani.users[i].Lessen.length; s++) {
+                                            if (datani.users[i].Lessen[x].vragen[s].vraag == req.params.vraag) {
+                                                    
+                                                    console.log("vraag al in database")
+                                                }else{
+                                                    datani.users[i].Lessen[x].vragen.push(newvraag);
+                                                }
+                                            
+                                        }
                                         res.json(datani.users[i].Lessen[x]);
                                         break;
                                     }

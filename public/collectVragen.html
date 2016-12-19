@@ -41,11 +41,13 @@
       </nav>
      
       <ul id="vragen"></ul>
-      <h1 id="devraag">De Vraag</h1>
+      <h1 id="devraag">Wachten voor de vraag</h1>
  
       <div id="opendiv">
             <label for="Code">Open:</label>
             <input class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+        <input type="checkbox" />Moeilijk ?<br/>
       </div>
       <div id="janeediv">
         <form>
@@ -53,21 +55,34 @@
             <br>
           <input type="radio" value="nee"> nee<br>
         </form>
+          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+        <input type="checkbox" />Moeilijk ?<br/>
       </div>
       <div id="codediv">
           <label for="Code">Code:</label>
           <textarea class="form-control" rows="5" id="comment"></textarea>
+          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+        <input type="checkbox" />Moeilijk ?<br/>
       </div>
       <div id="meerkeuzediv">
         <p>meerkeuzediv</p>
+          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+        <input type="checkbox" />Moeilijk ?<br/>
       </div>
       <div id="afbeeldingdiv">
         <div id="images"></div>
-      </div>
-        
-
-        <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
         <input type="checkbox" />Moeilijk ?<br/>
+      </div>
+      <div id="loadingdiv">
+        <div class="loader"></div>
+      </div>
+      <div id="closediv">
+        
+      </div>
+         
+        
+        
         
       <script src="/socket.io/socket.io.js"></script>
       <script>
@@ -76,6 +91,8 @@
         $("#codediv").hide();
         $("#meerkeuzediv").hide();
         $("#afbeeldingdiv").hide();
+        $("#loadingdiv").show();
+        $("#closediv").hide();
           
           
         var app = angular.module("ApiCall", []);
@@ -83,7 +100,16 @@
         $scope.addAnswer = function(){
               socket.emit('antwoord', { vraag: $('#m').val(), bool: boolcheck });
               $('#m').val('');
-              console.log('send');}
+              console.log('send');
+                $("#opendiv").hide();
+                $("#janeediv").hide();
+                $("#codediv").hide();
+                $("#meerkeuzediv").hide();
+                $("#afbeeldingdiv").hide();
+                $("#loadingdiv").show();
+                $("#closediv").hide();
+            document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";}
+        
         
         }); 
            window.onload = function () {
@@ -127,6 +153,7 @@
                 $("#janeediv").hide();
                 $("#codediv").show();
                 $("#meerkeuzediv").hide();
+                $("#loadingdiv").hide();
                 $("#afbeeldingdiv").hide(); 
             }
             if (type == "janee"){
@@ -136,6 +163,7 @@
                 $("#janeediv").show();
                 $("#codediv").hide();
                 $("#meerkeuzediv").hide();
+                $("#loadingdiv").hide();
                 $("#afbeeldingdiv").hide();
             }
             if (type == "open"){
@@ -145,6 +173,7 @@
                 $("#janeediv").hide();
                 $("#codediv").hide();
                 $("#meerkeuzediv").hide();
+                $("#loadingdiv").hide();
                 $("#afbeeldingdiv").hide();
             }
             if (type == "meerkeuzen"){
@@ -154,6 +183,7 @@
                 $("#janeediv").hide();
                 $("#codediv").hide();
                 $("#meerkeuzediv").show();
+                $("#loadingdiv").hide();
                 $("#afbeeldingdiv").hide();
             }
             if (type == "afbeelding"){
@@ -163,9 +193,51 @@
                 $("#janeediv").hide();
                 $("#codediv").hide();
                 $("#meerkeuzediv").hide();
+                $("#loadingdiv").hide();
                 $("#afbeeldingdiv").show();
+            }
+            if (type == "Nieuwe vraag"){
+                typevraag = "secondje...";
+                $("#opendiv").hide();
+                $("#janeediv").hide();
+                $("#codediv").hide();
+                $("#meerkeuzediv").hide();
+                $("#afbeeldingdiv").hide();
+                $("#loadingdiv").show(); 
+                $("#closediv").hide();
+            }
+            if (type == "closed"){
+                typevraag = "sluiten";
+                $("#opendiv").hide();
+                $("#janeediv").hide();
+                $("#codediv").hide();
+                $("#meerkeuzediv").hide();
+                $("#afbeeldingdiv").hide();
+                $("#loadingdiv").hide(); 
+                $("#closediv").show();
             }
         });
       </script>
+        <style>
+            .loader {
+              border: 16px solid #f3f3f3;
+              border-radius: 50%;
+              border-top: 16px solid #3498db;
+              width: 120px;
+              height: 120px;
+              -webkit-animation: spin 2s linear infinite;
+              animation: spin 2s linear infinite;
+            }
+
+            @-webkit-keyframes spin {
+              0% { -webkit-transform: rotate(0deg); }
+              100% { -webkit-transform: rotate(360deg); }
+            }
+
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+        </style>
   </body>
 </html>

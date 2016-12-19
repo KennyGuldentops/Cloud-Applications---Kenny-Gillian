@@ -60,7 +60,7 @@
             <br>
             <button type="button" id="vraag1" class="btn btn-default btn-lg">Open vraag</button>
             <button type="button" id="vraag2" class="btn btn-default btn-lg">ja/nee vraag</button>
-            <button type="button" id="vraag3" class="btn btn-default btn-lg">Code vraag</button>
+            
             <button type="button" id="vraag4" class="btn btn-default btn-lg">Meerkeuze vraag</button> 
             <button type="button" id="vraag5" class="btn btn-default btn-lg">Afbeelding vraag</button>
             <br>
@@ -80,23 +80,23 @@
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
             </div>
             
-             <div id="CodeVraag">
-                <br>            <h2>Stel de Code vraag</h2>
-                <br>
-                <ul id="messages"></ul>
-                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
-            </div>
-            
              <div id="MeerkeuzenVraag">
                 <br>            <h2>Stel de Meerkeuzen vraag</h2>
                 <br>
                 <ul id="messages"></ul>
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
-                  <h3>Mogenlijke Antwoorden</h3>
-                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
-                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
-                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
                  
+                 <h3>Mogelijke Antwoorden</h3>
+                 <form ng-submit="AntwoordenAdd()">
+                    <input type="text" ng-model="Remove" size="50" placeholder="Add New">
+                    <input type="submit" value="Add New">
+                </form>
+
+                 <div ng-repeat="x in MogelijkeAntwoorden">
+                    <input type="checkbox" ng-click="remove()" ng-model="x.remove"> <span ng-bind="x.MeerkeuzeAntwoorden"></span>
+                </div>
+
+
             </div>
             
              <div id="AfbeeldingVraag">
@@ -105,7 +105,7 @@
                 <ul id="messages"></ul>
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
                  <form name="myForm" ng-submit="">
-                <input ng-model='file' id="file" type="file"/>
+                <input id="file" type="file" accept="file_extension|image/*"/>
                 </form>
             </div>
             
@@ -137,6 +137,7 @@
     </script>
       
     <script src="/socket.io/socket.io.js"></script>
+    
     <script>
         var user;
         
@@ -159,7 +160,8 @@
                 console.log("cannot get profileinfo");
               });
         };
-            
+        
+        
                 
             
         $scope.addVraag = function() {
@@ -170,6 +172,9 @@
                     socket.emit('vraag', $('#m').val());
                     $('#m').val('');
                     socket.emit('typevraag', type);
+                    if (type == "meerkeuzen"){
+                        socket.emit('Antwoorden', $scope.MogelijkeAntwoorden);
+                    }
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
               }); 
@@ -177,6 +182,21 @@
                         window.location="/collectAntwoorden.html"
                     }, 100);
         };
+        $scope.MogelijkeAntwoorden = [];
+        $scope.AntwoordenAdd = function() {
+        $scope.MogelijkeAntwoorden.push({MeerkeuzeAntwoorden:$scope.Remove});
+        $scope.Remove = "";
+        console.log($scope.MogelijkeAntwoorden);
+    };
+
+    $scope.remove = function() {
+        var oldList = $scope.MogelijkeAntwoorden;
+        $scope.MogelijkeAntwoorden = [];
+        angular.forEach(oldList, function(x) {
+            if (!x.remove) $scope.MogelijkeAntwoorden.push(x);
+        });
+        console.log($scope.MogelijkeAntwoorden.x);
+    };
             
             $(function(){
                $("#file").on('change', function(e){
@@ -210,13 +230,11 @@
         var type;
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
         $("#vraag1").click(function(){
             $("#OpenVraag").show();
             $("#JaNeeVraag").hide();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
             type = "open";
@@ -224,23 +242,13 @@
            $("#vraag2").click(function(){
             $("#OpenVraag").hide();
             $("#JaNeeVraag").show();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
             type = "janee";
         });
-           $("#vraag3").click(function(){
-            $("#OpenVraag").hide();
-            $("#JaNeeVraag").hide();
-            $("#CodeVraag").show();
-            $("#MeerkeuzenVraag").hide();
-            $("#AfbeeldingVraag").hide();
-            type = "code";
-        });
            $("#vraag4").click(function(){
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").show();
             $("#AfbeeldingVraag").hide();
             type = "meerkeuzen";
@@ -248,7 +256,6 @@
            $("#vraag5").click(function(){
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").show();
             type = "afbeelding";

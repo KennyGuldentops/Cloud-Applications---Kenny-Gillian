@@ -75,13 +75,19 @@
             var app = angular.module('myApp', []);
             app.controller("myCtrl", function($scope ,$http, $filter){
             $scope.backvragen = function() {
-              var timer = setTimeout(function() {
+               var socket = io("/" + RandomFiltered);
+              
+                socket.emit('vraag', "Nieuwe vraag komt eraan");
+                socket.emit('typevraag', "Nieuwe vraag");
+                var timer = setTimeout(function() {
                         window.location="/teacherVragen.html"}, 100);
             }
             $scope.closesocket = function() {
                 var socket = io("/" + RandomFiltered);
                 console.log("socketclosin") 
-                socket.emit('close');
+                
+                socket.emit('typevraag', "closed");
+                socket.emit('vraag', "Deze les is gesloten");
             }
             $scope.probleemvraag = function() {
                 console.log("test");
