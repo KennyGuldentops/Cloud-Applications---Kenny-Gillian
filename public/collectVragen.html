@@ -47,20 +47,22 @@
             <label for="Code">Open:</label>
             <input class="form-control input-lg" type="text" style="text-align:center" id="m"/>
       </div>
-      <div id="janeediv">
-        <form>
-          <input type="radio" value="ja"> ja
+        
+      <div id="janeediv">       
+          <button ng-click="AnswerJA()">ja</button>
             <br>
-          <input type="radio" value="nee"> nee<br>
-        </form>
+          <button ng-click="AnswerNEE()">nee</button>      
       </div>
+        
       <div id="codediv">
           <label for="Code">Code:</label>
           <textarea class="form-control" rows="5" id="comment"></textarea>
       </div>
+        
       <div id="meerkeuzediv">
         <p>meerkeuzediv</p>
       </div>
+        
       <div id="afbeeldingdiv">
         <div id="images"></div>
       </div>
@@ -70,23 +72,17 @@
         <input type="checkbox" />Moeilijk ?<br/>
         
       <script src="/socket.io/socket.io.js"></script>
+
       <script>
         $("#opendiv").hide();
         $("#janeediv").hide();
         $("#codediv").hide();
         $("#meerkeuzediv").hide();
         $("#afbeeldingdiv").hide();
-          
-          
-        var app = angular.module("ApiCall", []);
-        app.controller("myCtrl", function($scope){ 
-        $scope.addAnswer = function(){
-              socket.emit('antwoord', { vraag: $('#m').val(), bool: boolcheck });
-              $('#m').val('');
-              console.log('send');}
-        
-        }); 
-           window.onload = function () {
+         
+        var JA;
+        var NEE;
+        window.onload = function () {
                 var input = document.querySelector('input[type=checkbox]');
 
                 function check() {
@@ -95,9 +91,36 @@
                 input.onchange = check;
                 check();
             };
-          
-          
-          
+            
+        var app = angular.module("ApiCall", []);
+        app.controller("myCtrl", function($scope){ 
+        $scope.addAnswer = function(){
+            if(typevraag == "open"){
+                socket.emit('antwoord', { vraag: $('#m').val(), bool: boolcheck });
+                $('#m').val('');
+            }
+          };
+            
+        $scope.AnswerJA = function(){
+            JA = 'Ja';
+            console.log(JA);
+            socket.emit('antwoord', { vraag: JA , bool: boolcheck});
+        
+        };
+            
+        $scope.AnswerNEE = function(){
+            NEE = 'Nee'
+            console.log(NEE);   
+            socket.emit('antwoord', { vraag: NEE , bool: boolcheck});
+        };
+            
+        }); 
+           
+       
+        
+        //janee
+
+        //  
         var typevraag;
         var RandomCode = localStorage.getItem('inputCode');
         var RandomFiltered = RandomCode.slice(1,-1);
@@ -117,6 +140,9 @@
             
         });
 
+        socket.on('Antwoorden', function(Antwoorden){
+            console.log(Antwoorden); 
+        });
           
         socket.on('typevraag', function(type){
             console.log(type + "type")
@@ -128,6 +154,7 @@
                 $("#codediv").show();
                 $("#meerkeuzediv").hide();
                 $("#afbeeldingdiv").hide(); 
+                $("#VraagButton").show();
             }
             if (type == "janee"){
                 typevraag = "janee";
@@ -137,6 +164,7 @@
                 $("#codediv").hide();
                 $("#meerkeuzediv").hide();
                 $("#afbeeldingdiv").hide();
+                $("#VraagButton").hide();
             }
             if (type == "open"){
                 typevraag = "open";
@@ -146,6 +174,7 @@
                 $("#codediv").hide();
                 $("#meerkeuzediv").hide();
                 $("#afbeeldingdiv").hide();
+                $("#VraagButton").show();
             }
             if (type == "meerkeuzen"){
                 typevraag = "meerkeuzen";
@@ -155,6 +184,7 @@
                 $("#codediv").hide();
                 $("#meerkeuzediv").show();
                 $("#afbeeldingdiv").hide();
+                $("#VraagButton").show();
             }
             if (type == "afbeelding"){
                 typevraag = "afbeelding";
@@ -164,6 +194,7 @@
                 $("#codediv").hide();
                 $("#meerkeuzediv").hide();
                 $("#afbeeldingdiv").show();
+                $("#VraagButton").show();
             }
         });
       </script>

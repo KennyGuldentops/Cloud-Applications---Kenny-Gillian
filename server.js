@@ -154,16 +154,23 @@ app.get('/randomcode', function (req, res) {
         nsp.emit('vraag', msg);
         console.log('vraag: ' + msg);
     });
+            
+    socket.on('Antwoorden', function(Antwoorden){
+        nsp.emit('Antwoorden', Antwoorden);
+        console.log('Antwoorden: ' + Antwoorden);
+    });
+    
     socket.on('typevraag', function(type){
         for (var i = 0; i < currentvragen.length; i++) {
             if(currentvragen[i].id == RandomRoomCode){
                 currentvragen[i].type = type;
-
             }
         }
         nsp.emit('typevraag', type);
         console.log('typevraag: ' + type);
     });
+               
+            
     socket.on('antwoord', function(antwoord){
         var answerd = false;
         for (var i = 0; i < idray.length; i++) {
@@ -198,6 +205,7 @@ app.get('/randomcode', function (req, res) {
         socket.disconnect();
         console.log('socket closed: ' + RandomRoomCode);
     });
+            
 });
     res.json(RandomRoomCode);
 });

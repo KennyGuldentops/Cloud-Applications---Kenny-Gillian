@@ -60,7 +60,7 @@
             <br>
             <button type="button" id="vraag1" class="btn btn-default btn-lg">Open vraag</button>
             <button type="button" id="vraag2" class="btn btn-default btn-lg">ja/nee vraag</button>
-            <button type="button" id="vraag3" class="btn btn-default btn-lg">Code vraag</button>
+            
             <button type="button" id="vraag4" class="btn btn-default btn-lg">Meerkeuze vraag</button> 
             <button type="button" id="vraag5" class="btn btn-default btn-lg">Afbeelding vraag</button>
             <br>
@@ -80,23 +80,23 @@
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
             </div>
             
-             <div id="CodeVraag">
-                <br>            <h2>Stel de Code vraag</h2>
-                <br>
-                <ul id="messages"></ul>
-                <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
-            </div>
-            
              <div id="MeerkeuzenVraag">
                 <br>            <h2>Stel de Meerkeuzen vraag</h2>
                 <br>
                 <ul id="messages"></ul>
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
-                  <h3>Mogenlijke Antwoorden</h3>
-                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
-                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
-                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:left" id="m"/>
                  
+                 <h3>Mogelijke Antwoorden</h3>
+                 <form ng-submit="AntwoordenAdd()">
+                    <input type="text" ng-model="Remove" size="50" placeholder="Add New">
+                    <input type="submit" value="Add New">
+                </form>
+
+                 <div ng-repeat="x in MogelijkeAntwoorden">
+                    <input type="checkbox" ng-click="remove()" ng-model="x.remove"> <span ng-bind="x.MeerkeuzeAntwoorden"></span>
+                </div>
+
+
             </div>
             
              <div id="AfbeeldingVraag">
@@ -137,6 +137,7 @@
     </script>
       
     <script src="/socket.io/socket.io.js"></script>
+    
     <script>
         var user;
         
@@ -170,6 +171,9 @@
                     socket.emit('vraag', $('#m').val());
                     $('#m').val('');
                     socket.emit('typevraag', type);
+                    if (type == "meerkeuzen"){
+                        socket.emit('Antwoorden', $scope.MogelijkeAntwoorden);
+                    }
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
               }); 
@@ -210,13 +214,11 @@
         var type;
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
         $("#vraag1").click(function(){
             $("#OpenVraag").show();
             $("#JaNeeVraag").hide();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
             type = "open";
@@ -224,23 +226,13 @@
            $("#vraag2").click(function(){
             $("#OpenVraag").hide();
             $("#JaNeeVraag").show();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
             type = "janee";
         });
-           $("#vraag3").click(function(){
-            $("#OpenVraag").hide();
-            $("#JaNeeVraag").hide();
-            $("#CodeVraag").show();
-            $("#MeerkeuzenVraag").hide();
-            $("#AfbeeldingVraag").hide();
-            type = "code";
-        });
            $("#vraag4").click(function(){
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").show();
             $("#AfbeeldingVraag").hide();
             type = "meerkeuzen";
@@ -248,7 +240,6 @@
            $("#vraag5").click(function(){
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();
-            $("#CodeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").show();
             type = "afbeelding";
