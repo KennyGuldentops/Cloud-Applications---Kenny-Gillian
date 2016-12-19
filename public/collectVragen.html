@@ -62,9 +62,9 @@
         <p>meerkeuzediv</p>
       </div>
       <div id="afbeeldingdiv">
-        <p>afbeeldingdiv</p>
+        <div id="images"></div>
       </div>
-
+        
 
         <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
         <input type="checkbox" />Moeilijk ?<br/>
@@ -106,6 +106,15 @@
         socket.on('vraag', function(msg){
             console.log(msg + "msg");
             $('#devraag').text(msg);  
+        });
+          
+        socket.on('addimage', function(msg, base64image){
+            $('#images').empty();
+            $('#images').append
+            ($('<p>').append('<img src="'+base64image+'"/>'
+                )
+            ); 
+            
         });
 
           

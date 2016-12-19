@@ -185,9 +185,15 @@ app.get('/randomcode', function (req, res) {
         }
         
     });
+            
+    socket.on('user image', function(image){
+        nsp.emit('addimage', 'Image received: ', image);
+    });  
+            
     socket.on('disconnect', function(){
         console.log('someone disconnected from room: ' + RandomRoomCode);
     });
+            
     socket.on('close', function(){
         socket.disconnect();
         console.log('socket closed: ' + RandomRoomCode);
