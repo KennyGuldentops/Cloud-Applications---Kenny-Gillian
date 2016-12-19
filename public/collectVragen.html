@@ -44,28 +44,15 @@
       <h1 id="devraag">Wachten voor de vraag</h1>
  
       <div id="opendiv">
-            <label for="Code">Open:</label>
-            <input class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+            <input class="form-control input-lg" type="text" style="text-align:center" id="openantwoord"/>
           <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
         <input type="checkbox" />Moeilijk ?<br/>
-      </div>
-      <div id="janeediv">       
-          <button ng-click="AnswerJA()">ja</button>
-            <br>
-
-          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
-        <input type="checkbox" />Moeilijk ?<br/>
-
-          <button ng-click="AnswerNEE()">nee</button>  
-
-
       </div>
         
-      <div id="codediv">
-          <label for="Code">Code:</label>
-          <textarea class="form-control" rows="5" id="comment"></textarea>
-          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
-        <input type="checkbox" />Moeilijk ?<br/>
+      <div id="janeediv">       
+          <button ng-click="AnswerNEE()">nee</button>  
+          <button ng-click="AnswerJA()">ja</button>
+            <br>
       </div>
         
       <div id="meerkeuzediv">
@@ -76,10 +63,11 @@
         
       <div id="afbeeldingdiv">
         <div id="images"></div>
-           <input class="form-control input-lg" type="text" style="text-align:center" id="m"/>
+          <input class="form-control input-lg" type="text" style="text-align:center" id="afbeeldingantwoord"/>
           <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
         <input type="checkbox" />Moeilijk ?<br/>
       </div>
+        
       <div id="loadingdiv">
         <div class="loader"></div>
       </div>
@@ -119,8 +107,7 @@
         
         
         }); 
-         
-         
+            
         var JA;
         var NEE;
         window.onload = function () {
@@ -137,7 +124,11 @@
         app.controller("myCtrl", function($scope){ 
         $scope.addAnswer = function(){
             if(typevraag == "open"){
-                socket.emit('antwoord', { vraag: $('#m').val(), bool: boolcheck });
+                socket.emit('antwoord', { vraag: $('#openantwoord').val(), bool: boolcheck });
+                $('#m').val('');
+            }
+            if(typevraag == "afbeelding"){
+                socket.emit('antwoord', { vraag: $('#afbeeldingantwoord').val(), bool: boolcheck });
                 $('#m').val('');
             }
           };
