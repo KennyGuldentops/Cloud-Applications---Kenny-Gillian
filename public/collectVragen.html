@@ -33,16 +33,12 @@
         <div class="containter">
             <ul class="nav navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/features.html">Features</a>
+                    
                 </li>
             </ul>
           </div>
 
       </nav>
-     
-        <ul>
-            <li ng-repeat="antwoorde in meerkeuzeantwoorden"><a>{{antwoorde}}</a></li>
-        </ul>
         
       <ul id="vragen"></ul>
       <h1 id="devraag">Wachten voor de vraag</h1>
@@ -60,12 +56,15 @@
       </div>
         
       <div id="meerkeuzediv">
-        <p>meerkeuzediv</p>
-          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+           <ul>
+                <li ng-repeat="antwoorde in meerkeuzeantwoorden">
+                    <button ng-click="AnswerMulti(antwoorde)">{{antwoorde}}</button>
+               </li>
+           </ul>
         <input type="checkbox" />Moeilijk ?<br/>
       </div>
         
-      <div id="afbeeldingdiv">
+      <div id="afbeeldingdiv">  
         <div id="images"></div>
           <input class="form-control input-lg" type="text" style="text-align:center" id="afbeeldingantwoord"/>
           <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
@@ -79,10 +78,6 @@
       <div id="closediv">
         
       </div>
-        
-        
-         
-        
         
         
       <script src="/socket.io/socket.io.js"></script>
@@ -100,20 +95,22 @@
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope, $apply){ 
         $scope.addAnswer = function(){
-              socket.emit('antwoord', { vraag: $('#m').val(), bool: boolcheck });
-              $('#m').val('');
-              console.log('send');
-                $("#opendiv").hide();
-                $("#janeediv").hide();
-                $("#codediv").hide();
-                $("#meerkeuzediv").hide();
-                $("#afbeeldingdiv").hide();
-                $("#loadingdiv").show();
-                $("#closediv").hide();
-            document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";}
-        
-        
+                  socket.emit('antwoord', { vraag: $('#m').val(), bool: boolcheck });
+                  $('#m').val('');
+                  
+                    $("#opendiv").hide();
+                    $("#janeediv").hide();
+                    $("#codediv").hide();
+                    $("#meerkeuzediv").hide();
+                    $("#afbeeldingdiv").hide();
+                    $("#loadingdiv").show();
+                    $("#closediv").hide();
+                    $("#vragen").hide();
+                document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
+            };
         }); 
+        
+       
           
         var mogelijkeantwoorden;
         var JA;
@@ -129,7 +126,12 @@
             };
             
         var app = angular.module("ApiCall", []);
-        app.controller("myCtrl", function($scope){ 
+        app.controller("myCtrl", function($scope){
+        
+        $scope.AnswerMulti = function(antwoorde){
+            socket.emit('antwoord', { vraag: antwoorde , bool: boolcheck});
+        };
+            
         $scope.addAnswer = function(){
             if(typevraag == "open"){
                 socket.emit('antwoord', { vraag: $('#openantwoord').val(), bool: boolcheck });
@@ -141,18 +143,15 @@
             }
           };
         
-       
-            
         $scope.AnswerJA = function(){
             JA = 'Ja';
-            console.log(JA);
+            
             socket.emit('antwoord', { vraag: JA , bool: boolcheck});
-        
         };
             
         $scope.AnswerNEE = function(){
             NEE = 'Nee'
-            console.log(NEE);   
+             
             socket.emit('antwoord', { vraag: NEE , bool: boolcheck});
         };
             
@@ -160,7 +159,7 @@
         socket.on('Antwoorden', function(Antwoorden){
             for (var i = 0; i < Antwoorden.length; i++){
                 $scope.meerkeuzeantwoorden.push(Antwoorden[i].MeerkeuzeAntwoorden); 
-                console.log($scope.meerkeuzeantwoorden);
+                
                 $scope.$apply();
             }
         });
@@ -175,10 +174,10 @@
         var typevraag;
         var RandomCode = localStorage.getItem('inputCode');
         var RandomFiltered = RandomCode.slice(1,-1);
-        console.log(RandomFiltered);
+        
         var socket = io("/" + RandomFiltered);
         socket.on('vraag', function(msg){
-            console.log(msg + "msg");
+            
             $('#devraag').text(msg);  
         });
           
@@ -193,10 +192,10 @@
           
           
         socket.on('typevraag', function(type){
-            console.log(type + "type")
+           
             if (type == "code"){
                 typevraag = "code";
-                console.log(typevraag);
+                
                 $("#opendiv").hide();
                 $("#janeediv").hide();
                 $("#codediv").show();
@@ -207,7 +206,7 @@
             }
             if (type == "janee"){
                 typevraag = "janee";
-                console.log(typevraag);
+               
                 $("#opendiv").hide();
                 $("#janeediv").show();
                 $("#codediv").hide();
@@ -218,7 +217,7 @@
             }
             if (type == "open"){
                 typevraag = "open";
-                console.log(typevraag);
+                
                 $("#opendiv").show();
                 $("#janeediv").hide();
                 $("#codediv").hide();
@@ -229,7 +228,7 @@
             }
             if (type == "meerkeuzen"){
                 typevraag = "meerkeuzen";
-                console.log(typevraag);
+               
                 $("#opendiv").hide();
                 $("#janeediv").hide();
                 $("#codediv").hide();
@@ -240,7 +239,7 @@
             }
             if (type == "afbeelding"){
                 typevraag = "afbeelding";
-                console.log(typevraag);
+                
                 $("#opendiv").hide();
                 $("#janeediv").hide();
                 $("#codediv").hide();
