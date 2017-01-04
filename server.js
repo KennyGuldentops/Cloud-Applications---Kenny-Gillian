@@ -19,7 +19,8 @@ var FacebookAuth = require('passport-facebook').Strategy;
 passport.use(new FacebookAuth({
     clientID: '160901634379580',
     clientSecret: '2a42f07d85f26fcad2a937c115828bc7',
-    callbackURL: 'http://localhost:80/login/facebook/return'
+    callbackURL: 'http://localhost:80/login/facebook/return',
+    profileFields: ['id', 'name', 'displayName', 'photos', 'hometown', 'profileUrl']
   },              
 function(accessToken, refreshToken, profile, cb) {
     return cb(null, profile);
@@ -65,6 +66,7 @@ var MongoClient = mongodb.MongoClient;
 var array = [];
 var UserID;
 var UserDisplayName;
+var UserProfileImage;
 
 
 
@@ -439,11 +441,15 @@ app.get('/login/facebook/return',
     res.redirect('/teacherOverzicht.html');
     UserID = req.user.id;
     UserDisplayName = req.user.displayName;
+    
+    UserProfileImage = req.user._json.picture.data.url;
+    console.log(req.user._json.picture.data.url)
   });
 
 app.get('/profileInfo', function(req, res){
     var User = UserID + UserDisplayName;
-    res.json(User);
+    var ProfilePicture = UserProfileImage
+    res.json({name: User , url: ProfilePicture});
     
 });
 

@@ -29,6 +29,7 @@
 
       <script>
         var user;
+        var ProfileImage;
           
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope ,$http, $filter){
@@ -52,13 +53,16 @@
               });  
             };
             
-             $scope.getProfile = function(){
+            $scope.getProfile = function(){
             $http({
               method: 'GET',
               url: '/profileInfo'
             }).then(function successCallback(response) {
-                user = response.data;
-                console.log(user);
+                user = response.data.name;
+                var UserName = user.replace(/\d+/g, '');
+                ProfileImage = response.data.url;
+                $("#ProfileImage").attr("src", ProfileImage);
+                $('#UserWelkom').text("Welkom, " + UserName);
               }, function errorCallback(response) {
                 console.log("cannot get profile info");
               });
@@ -70,32 +74,32 @@
 
       <!-- Navigatie bar -->
       <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
 
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/index.html">Interactive Courses</a>
-        </div>
-    
-        <div class="containter">
-            <ul class="nav navbar-nav">
-                <li class="nav-item">
-                    
-                </li>
-            </ul>
+            <div class="navbar-header">
+              <a class="navbar-brand" href="/index.html">Interactive Courses</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+                <img id="ProfileImage">
+
+              </ul>
+            </div>
           </div>
-
-        </nav>
+      </nav>
         
         <!-- Content -->
 
       
-            <div class="container-fluid text-center">
-       <div class="row content">
+        <div class="container-fluid text-center">
+        <div class="row content">
          <!-- Left -->  
          <div class="col-sm-2 sidenav"></div>
          
          <!-- Middle --> 
-         <div id="OverzichtCenter" class="col-sm-8 text-center">
-            <h1>Welkom, user!</h1>
+         <div id="OverzichtCenter" class="col-sm-8 text-center" data-ng-init="getProfile()">
+            <h1 id="UserWelkom">Welkom, user!</h1>
             <hr>
             <br>
             <h3>Geef uw les een naam</h3>
@@ -103,7 +107,7 @@
                 
                 
                     <form class="input-group" name="myForm" >
-                        <input type="text" class="form-control input-lg" ng-model="mytext" id="LesNaam"required>
+                        <input style="text-align:center" type="text" class="form-control input-lg" ng-model="mytext" id="LesNaam"required>
                         <span class="input-group-btn">
                             <button ng-disabled="myForm.$invalid" class="btn btn-lg" type="button" ng-click="StartLes()">Start Lesson!</button>
                         </span>

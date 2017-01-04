@@ -24,41 +24,57 @@
   </head>
 
     <body ng-app="ApiCall" ng-cloak ng-controller="myCtrl">
-        <nav class="navbar navbar-inverse">
+              <!-- Navigatie bar -->
+      <nav class="navbar navbar-inverse" >
+          <div class="container-fluid" data-ng-init="getProfile()">
 
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/index.html">Interactive Courses</a>
-        </div>
-    
-        <div class="containter">
-            <ul class="nav navbar-nav">
-                <li class="nav-item">
-                    
-                </li>
-            </ul>
+            <div class="navbar-header">
+              <a class="navbar-brand" href="/index.html">Interactive Courses</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+
+              </ul>
+            </div>
           </div>
-
       </nav>
         
-      <ul id="vragen"></ul>
+        
+        
+        <!-- Content -->
+
+      <div class="container-fluid text-center">
+       <div class="row content">
+         <!-- Left -->  
+         <div class="col-sm-2 sidenav"></div>
+         
+         <!-- Middle --> 
+         <div id="OverzichtCenter" class="col-sm-8 text-center">
+             <ul id="vragen"></ul>
       <h1 id="devraag">Wachten voor de vraag</h1>
- 
+            <hr>
+            <br>
+
+        
       <div id="opendiv">
         <input class="form-control input-lg" type="text" style="text-align:center" id="openantwoord"/>
-        <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+        <br>
+          <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
+
       </div>
         
-      <div id="janeediv">       
-          <button ng-click="AnswerNEE()">nee</button>  
-          <button ng-click="AnswerJA()">ja</button>
+      <div id="janeediv">    
+          <button id="JaNeeButton" class="btn btn-default btn-lg" ng-click="AnswerJA()">ja</button>
+          <button id="JaNeeButton" class="btn btn-default btn-lg" ng-click="AnswerNEE()">nee</button>  
             <br>
       </div>
         
       <div id="meerkeuzediv">
-           <ul>
-                <li ng-repeat="antwoorde in meerkeuzeantwoorden">
-                    <button ng-click="AnswerMulti(antwoorde)">{{antwoorde}}</button>
-               </li>
+           <ul ng-repeat="antwoorde in meerkeuzeantwoorden">
+                <ul>
+               <button id="MeerkeuzeAnswers" ng-click="AnswerMulti(antwoorde)">{{antwoorde}}</button>
+               </ul>
            </ul>
       </div>
         
@@ -78,6 +94,13 @@
         
       <div id="closediv">
         
+      </div>
+        </div>
+         
+         <!-- Right -->    
+         <div class="col-sm-2 sidenav"></div>
+           
+       </div>
       </div>
         
         
@@ -107,8 +130,7 @@
             };
             
         var app = angular.module("ApiCall", []);
-        app.controller("myCtrl", function($scope){
-        
+       app.controller("myCtrl", function($scope){ 
         $scope.AnswerMulti = function(antwoorde){
             socket.emit('antwoord', { vraag: antwoorde , bool: boolcheck});
              $("#meerkeuzediv").hide();
@@ -154,14 +176,13 @@
             document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
         };
             
-        $scope.meerkeuzeantwoorden = [];
+        $scope.meerkeuzeantwoorden = ["kappa21", "13115", "amalnz", ";azlnzl"];
         socket.on('Antwoorden', function(Antwoorden){
             for (var i = 0; i < Antwoorden.length; i++){
                 $scope.meerkeuzeantwoorden.push(Antwoorden[i].MeerkeuzeAntwoorden); 
-                
                 $scope.$apply();
             }
-           
+            $scope.meerkeuzeantwoorden = [];
         });
             
         }); 
@@ -184,9 +205,8 @@
         socket.on('addimage', function(msg, base64image){
             $('#images').empty();
             $('#images').append
-            ($('<p>').append('<img src="'+base64image+'"/>')
+            ($('<p>').append('<img id="Afbeeldingstream" src="'+base64image+'"/>')
             ); 
-            
         });
           
           
@@ -194,7 +214,6 @@
            
              if (type == "janee"){
                 typevraag = "janee";
-               
                 $("#opendiv").hide();
                 $("#janeediv").show();
                 $("#codediv").hide();
@@ -264,26 +283,5 @@
             }
         });
       </script>
-        <style>
-            .loader {
-              border: 16px solid #f3f3f3;
-              border-radius: 50%;
-              border-top: 16px solid #3498db;
-              width: 120px;
-              height: 120px;
-              -webkit-animation: spin 2s linear infinite;
-              animation: spin 2s linear infinite;
-            }
-
-            @-webkit-keyframes spin {
-              0% { -webkit-transform: rotate(0deg); }
-              100% { -webkit-transform: rotate(360deg); }
-            }
-
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-        </style>
   </body>
 </html>

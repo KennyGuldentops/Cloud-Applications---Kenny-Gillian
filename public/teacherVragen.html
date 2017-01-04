@@ -27,28 +27,30 @@
       
       <!-- Navigatie bar -->
       <nav class="navbar navbar-inverse">
+          <div class="container-fluid" >
 
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/index.html">Interactive Courses</a>
-        </div>
-    
-        <div class="containter">
-            <ul class="nav navbar-nav">
-                <li class="nav-item">
-                   
-                </li>
-            </ul>
+            <div class="navbar-header">
+              <a class="navbar-brand" href="/index.html">Interactive Courses</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+                <img id="ProfileImage">
+
+              </ul>
+            </div>
           </div>
-
       </nav>
         
+      
         <!-- Content -->
-        
-      <div data-ng-init="getProfile()" class="container-fluid text-center">
-      <div data-ng-init="getProbleemvragen()" class="row content">
-
-          <div id="Kappa" class="col-sm-2"></div>
-        <div id="CenterPage" class="col-sm-8 text-center">
+       <div class="container-fluid text-center" data-ng-init="getProfile()">
+        <div class="row content" data-ng-init="getProbleemvragen()">
+         <!-- Left -->  
+         <div class="col-sm-2 sidenav"></div>
+         
+         <!-- Middle --> 
+         <div id="OverzichtCenter" class="col-sm-8" data-ng-init="getProfile()">
 
                 
             <h1 id="RandomCodeTag"/>
@@ -60,12 +62,10 @@
             <br>
             <button type="button" id="vraag1" class="btn btn-default btn-lg">Open vraag</button>
             <button type="button" id="vraag2" class="btn btn-default btn-lg">ja/nee vraag</button>
-            
             <button type="button" id="vraag4" class="btn btn-default btn-lg">Meerkeuze vraag</button> 
             <button type="button" id="vraag5" class="btn btn-default btn-lg">Afbeelding vraag</button>
             <br>
             
-       
             <div id="OpenVraag">
                 <br>            <h2>Stel de Openvraag</h2>
                 <br>
@@ -73,30 +73,30 @@
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
             </div>
             
-             <div id="JaNeeVraag">
+            <div id="JaNeeVraag">
                 <br>            <h2>Stel de Ja/Nee vraag</h2>
                 <br>
                 <ul id="messages"></ul>
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
             </div>
             
-             <div id="MeerkeuzenVraag">
-                <br>            <h2>Stel de Meerkeuzen vraag</h2>
+            <div id="MeerkeuzenVraag">
+                <br>            <h2>Stel de Meerkeuze vraag</h2>
                 <br>
                 <ul id="messages"></ul>
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
                  
                  <h3>Mogelijke Antwoorden</h3>
-                 <form ng-submit="AntwoordenAdd()">
-                    <input type="text" ng-model="Remove" size="50" placeholder="Add New">
-                    <input type="submit" value="Add New">
+                <form class="input-group" name="myForm" ng-submit="AntwoordenAdd()" >
+                        <input style="text-align:center" type="text" class="form-control input-lg" ng-model="Remove" required>
+                        <span class="input-group-btn">
+                            <button id="AddMeButton" ng-disabled="myForm.$invalid" class="btn btn-lg" type="submit"> Add!</button>
+                        </span>
                 </form>
 
-                 <div ng-repeat="x in MogelijkeAntwoorden">
-                    <input type="checkbox" ng-click="remove()" ng-model="x.remove"> <span ng-bind="x.MeerkeuzeAntwoorden"></span>
+                 <div  ng-repeat="x in MogelijkeAntwoorden">
+                    <input id="Keuzes" type="checkbox" ng-click="remove()" ng-model="x.remove"> <span ng-bind="x.MeerkeuzeAntwoorden"></span>
                 </div>
-
-
             </div>
             
              <div id="AfbeeldingVraag">
@@ -105,7 +105,9 @@
                 <ul id="messages"></ul>
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
                  <form name="myForm" ng-submit="">
-                <input id="file" type="file" accept="file_extension|image/*"/>
+                 
+                
+                <input id="file" type="file" accept="file_extension|image/*" class="form-control input-sm" required>
                 </form>
             </div>
             
@@ -113,16 +115,28 @@
             
                 <br>
                 <button ng-click="addVraag()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
+             
                 <button type="button" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
+             
             <ul class="list-group">
-                      <li class="list-group-item" ng-repeat="item in items track by $index">{{item}}</li>
-                </ul>
+                <li class="list-group-item" ng-repeat="item in items track by $index">{{item}}</li>
+            </ul>
           </div>
-      <div id="CenterPage" class="col-sm-2"></div>
-
-            
+                  
+        <!-- Right -->    
+         <div class="col-sm-2 sidenav"></div>
+             
         </div>
-      </div>
+       </div>
+ 
+      
+      
+      
+        
+     
+
+
+
        
       
     <script>
@@ -154,8 +168,11 @@
               method: 'GET',
               url: '/profileInfo'
             }).then(function successCallback(response) {
-                user = response.data;
-                console.log(user);
+                user = response.data.name;
+                var UserName = user.replace(/\d+/g, '');
+                ProfileImage = response.data.url;
+                $("#ProfileImage").attr("src", ProfileImage);
+                
               }, function errorCallback(response) {
                 console.log("cannot get profileinfo");
               });
@@ -183,11 +200,12 @@
                     }, 100);
         };
         $scope.MogelijkeAntwoorden = [];
+            
         $scope.AntwoordenAdd = function() {
-        $scope.MogelijkeAntwoorden.push({MeerkeuzeAntwoorden:$scope.Remove});
-        $scope.Remove = "";
-        console.log($scope.MogelijkeAntwoorden);
-    };
+            $scope.MogelijkeAntwoorden.push({MeerkeuzeAntwoorden:$scope.Remove});
+            $scope.Remove = "";
+            console.log($scope.MogelijkeAntwoorden);
+        };
 
     $scope.remove = function() {
         var oldList = $scope.MogelijkeAntwoorden;
