@@ -46,14 +46,12 @@
       <div id="opendiv">
         <input class="form-control input-lg" type="text" style="text-align:center" id="openantwoord"/>
         <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
-        <input type="checkbox" />Moeilijk ?<br/>
       </div>
         
       <div id="janeediv">       
           <button ng-click="AnswerNEE()">nee</button>  
           <button ng-click="AnswerJA()">ja</button>
             <br>
-          <input type="checkbox" />Moeilijk ?<br/>
       </div>
         
       <div id="meerkeuzediv">
@@ -62,20 +60,22 @@
                     <button ng-click="AnswerMulti(antwoorde)">{{antwoorde}}</button>
                </li>
            </ul>
-        <input type="checkbox" />Moeilijk ?<br/>
       </div>
         
       <div id="afbeeldingdiv">  
         <div id="images"></div>
           <input class="form-control input-lg" type="text" style="text-align:center" id="afbeeldingantwoord"/>
           <button ng-click="addAnswer()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Antwoord vraag!</button>
-        <input type="checkbox" />Moeilijk ?<br/>
       </div>
-        
+    
+      <div id="CheckMoeilijk">
+            <input type="checkbox"  />Moeilijk ?<br/>    
+      </div>
         
       <div id="loadingdiv">
         <div class="loader"></div>
       </div>
+        
       <div id="closediv">
         
       </div>
@@ -90,6 +90,7 @@
         $("#afbeeldingdiv").hide();
         $("#loadingdiv").show();
         $("#closediv").hide();
+        $("#CheckMoeilijk").hide();
           
         
         var mogelijkeantwoorden;
@@ -112,6 +113,7 @@
             socket.emit('antwoord', { vraag: antwoorde , bool: boolcheck});
              $("#meerkeuzediv").hide();
              $("#loadingdiv").show();
+             $("#CheckMoeilijk").hide();
             document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
         };
             
@@ -125,9 +127,9 @@
                 $('#m').val('');
             }
                     $("#opendiv").hide();
-                    
                     $("#afbeeldingdiv").hide();
                     $("#loadingdiv").show();
+                    $("#CheckMoeilijk").hide();
 
                 document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
           };
@@ -138,6 +140,7 @@
             socket.emit('antwoord', { vraag: JA , bool: boolcheck});
              $("#janeediv").hide();
              $("#loadingdiv").show();
+             $("#CheckMoeilijk").hide();
             document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
         };
             
@@ -147,6 +150,7 @@
             socket.emit('antwoord', { vraag: NEE , bool: boolcheck});
              $("#janeediv").hide();
              $("#loadingdiv").show();
+             $("#CheckMoeilijk").hide();
             document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
         };
             
@@ -180,8 +184,7 @@
         socket.on('addimage', function(msg, base64image){
             $('#images').empty();
             $('#images').append
-            ($('<p>').append('<img src="'+base64image+'"/>'
-                )
+            ($('<p>').append('<img src="'+base64image+'"/>')
             ); 
             
         });
@@ -189,18 +192,7 @@
           
         socket.on('typevraag', function(type){
            
-            if (type == "code"){
-                typevraag = "code";
-                
-                $("#opendiv").hide();
-                $("#janeediv").hide();
-                $("#codediv").show();
-                $("#meerkeuzediv").hide();
-                $("#loadingdiv").hide();
-                $("#afbeeldingdiv").hide(); 
-                $("#VraagButton").show();
-            }
-            if (type == "janee"){
+             if (type == "janee"){
                 typevraag = "janee";
                
                 $("#opendiv").hide();
@@ -210,6 +202,7 @@
                 $("#loadingdiv").hide();
                 $("#afbeeldingdiv").hide();
                 $("#VraagButton").hide();
+                $("#CheckMoeilijk").show();
             }
             if (type == "open"){
                 typevraag = "open";
@@ -221,9 +214,9 @@
                 $("#loadingdiv").hide();
                 $("#afbeeldingdiv").hide();
                 $("#VraagButton").show();
+                $("#CheckMoeilijk").show();
             }
             if (type == "meerkeuzen"){
-                console.log("kappa")
                 typevraag = "meerkeuzen";
                
                 $("#opendiv").hide();
@@ -233,6 +226,7 @@
                 $("#loadingdiv").hide();
                 $("#afbeeldingdiv").hide();
                 $("#VraagButton").show();
+                $("#CheckMoeilijk").show();
             }
             if (type == "afbeelding"){
                 typevraag = "afbeelding";
@@ -244,6 +238,7 @@
                 $("#loadingdiv").hide();
                 $("#afbeeldingdiv").show();
                 $("#VraagButton").show();
+                $("#CheckMoeilijk").show();
             }
             if (type == "Nieuwe vraag"){
                 typevraag = "secondje...";
@@ -254,6 +249,7 @@
                 $("#afbeeldingdiv").hide();
                 $("#loadingdiv").show(); 
                 $("#closediv").hide();
+                $("#CheckMoeilijk").hide();
             }
             if (type == "closed"){
                 typevraag = "sluiten";
@@ -264,6 +260,7 @@
                 $("#afbeeldingdiv").hide();
                 $("#loadingdiv").hide(); 
                 $("#closediv").show();
+                $("#CheckMoeilijk").hide();
             }
         });
       </script>

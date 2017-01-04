@@ -104,7 +104,16 @@
             console.log(RandomFiltered);
             var socket = io("/" + RandomFiltered);
             socket.on('antwoord', function(msg){
-                $('#vragen').append($('<li class="list-group-item">').text(msg.vraag));
+                if (msg.bool == "true"){
+
+                    $('#vragen').append($('<li class="list-group-item" style="color: red">').text(msg.vraag));
+                }
+                
+                if (msg.bool == "false"){
+
+                    $('#vragen').append($('<li class="list-group-item" style="color: green">').text(msg.vraag));
+                }
+                
             });
             });
           

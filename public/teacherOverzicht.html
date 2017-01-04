@@ -86,31 +86,39 @@
         </nav>
         
         <!-- Content -->
-        
-      <div data-ng-init="getProfile()" class="container-fluid text-center">
-      <div class="row content">
 
-          <div id="CenterPage" class="col-sm-2 text-center"></div>
-        <div id="CenterPage" class="col-sm-8 text-center">
-
+      
+            <div class="container-fluid text-center">
+       <div class="row content">
+         <!-- Left -->  
+         <div class="col-sm-2 sidenav"></div>
+         
+         <!-- Middle --> 
+         <div id="OverzichtCenter" class="col-sm-8 text-center">
             <h1>Welkom, user!</h1>
             <hr>
             <br>
-            <h2>Geef uw les een naam</h2>
+            <h3>Geef uw les een naam</h3>
             <br>
-            
-            <form name="myForm">
-              <input name="myText" class="form-control input-lg" type="text" name="test" ng-model="mytext" id="LesNaam"required />
-                <br>
-              <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="StartLes()" >Start les</button>
-            </form>
-            
+                
+                
+                    <form class="input-group" name="myForm" >
+                        <input type="text" class="form-control input-lg" ng-model="mytext" id="LesNaam"required>
+                        <span class="input-group-btn">
+                            <button ng-disabled="myForm.$invalid" class="btn btn-lg" type="button" ng-click="StartLes()">Start Lesson!</button>
+                        </span>
+                    </form>
+                    
+             
+             
+             
+           
         </div>
-          <div id="CenterPage" class="col-sm-2 text-center"></div>
-      
-        
-            
-        </div>
+         
+         <!-- Right -->    
+         <div class="col-sm-2 sidenav"></div>
+           
+       </div>
       </div>
             
   </body>
