@@ -46,11 +46,7 @@
       <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="backvragen()" >Nieuwe vraag</button>
       <button  class="btn btn-default" ng-click="closesocket()" >Einde sessie</button>
       <button  class="btn btn-default" ng-click="probleemvraag()" >Probleemvraag</button>
-      <input type="checkbox" />Checkbox<br/>
-            <span id="result"></span>
-            <script type="text/javascript">
-           
-            </script>
+ 
       <script src="/socket.io/socket.io.js"></script>
       <script>
             var Lesnaam = localStorage.getItem('StorageLesNaam');  
@@ -62,16 +58,7 @@
             var boolcheck;
             var user;
           
-            window.onload = function () {
-                var input = document.querySelector('input[type=checkbox]');
-
-                function check() {
-                    boolcheck = input.checked ? "true" : "false";
-                }
-                input.onchange = check;
-                check();
-            }
-             
+          
             var app = angular.module('myApp', []);
             app.controller("myCtrl", function($scope ,$http, $filter){
             $scope.backvragen = function() {
@@ -91,7 +78,7 @@
             }
             $scope.probleemvraag = function() {
                 console.log("test");
-                $http({method: 'POST', url: "http://localhost/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/"+boolcheck
+                $http({method: 'POST', url: "http://localhost/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/true"
                   }).then(function successCallback(response) {
                     console.log(response);
                     

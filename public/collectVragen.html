@@ -53,6 +53,7 @@
           <button ng-click="AnswerNEE()">nee</button>  
           <button ng-click="AnswerJA()">ja</button>
             <br>
+          <input type="checkbox" />Moeilijk ?<br/>
       </div>
         
       <div id="meerkeuzediv">
@@ -85,33 +86,12 @@
       <script>
         $("#opendiv").hide();
         $("#janeediv").hide();
-        $("#codediv").hide();
         $("#meerkeuzediv").hide();
         $("#afbeeldingdiv").hide();
         $("#loadingdiv").show();
         $("#closediv").hide();
           
-          
-        var app = angular.module("ApiCall", []);
-        app.controller("myCtrl", function($scope, $apply){ 
-        $scope.addAnswer = function(){
-                  socket.emit('antwoord', { vraag: $('#m').val(), bool: boolcheck });
-                  $('#m').val('');
-                  
-                    $("#opendiv").hide();
-                    $("#janeediv").hide();
-                    $("#codediv").hide();
-                    $("#meerkeuzediv").hide();
-                    $("#afbeeldingdiv").hide();
-                    $("#loadingdiv").show();
-                    $("#closediv").hide();
-                    $("#vragen").hide();
-                document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
-            };
-        }); 
         
-       
-          
         var mogelijkeantwoorden;
         var JA;
         var NEE;
@@ -130,6 +110,9 @@
         
         $scope.AnswerMulti = function(antwoorde){
             socket.emit('antwoord', { vraag: antwoorde , bool: boolcheck});
+             $("#meerkeuzediv").hide();
+             $("#loadingdiv").show();
+            document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
         };
             
         $scope.addAnswer = function(){
@@ -141,18 +124,30 @@
                 socket.emit('antwoord', { vraag: $('#afbeeldingantwoord').val(), bool: boolcheck });
                 $('#m').val('');
             }
+                    $("#opendiv").hide();
+                    
+                    $("#afbeeldingdiv").hide();
+                    $("#loadingdiv").show();
+
+                document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
           };
         
         $scope.AnswerJA = function(){
             JA = 'Ja';
             
             socket.emit('antwoord', { vraag: JA , bool: boolcheck});
+             $("#janeediv").hide();
+             $("#loadingdiv").show();
+            document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
         };
             
         $scope.AnswerNEE = function(){
             NEE = 'Nee'
              
             socket.emit('antwoord', { vraag: NEE , bool: boolcheck});
+             $("#janeediv").hide();
+             $("#loadingdiv").show();
+            document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
         };
             
         $scope.meerkeuzeantwoorden = [];
@@ -162,6 +157,7 @@
                 
                 $scope.$apply();
             }
+           
         });
             
         }); 
@@ -227,6 +223,7 @@
                 $("#VraagButton").show();
             }
             if (type == "meerkeuzen"){
+                console.log("kappa")
                 typevraag = "meerkeuzen";
                
                 $("#opendiv").hide();
