@@ -261,7 +261,7 @@
         console.log($scope.MogelijkeAntwoorden.x);
     };
     
-    $scope.removeProbleemvraag = function(){
+    $scope.removeProbleemvraag = function(item){
         $http({method: 'POST', url: "http://localhost/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+item+"/false"
                    /////////////////// remove out of list ///////////////////
                   }).then(function successCallback(response) {
