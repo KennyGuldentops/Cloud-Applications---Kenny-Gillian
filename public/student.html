@@ -58,11 +58,13 @@
         <!-- Content -->
         
       <div class="container-fluid text-center">
-      <div class="row content">
-      
-        <div id="CenterPage" class="col-sm-12 text-center">
-            
-            <h2>Type here the code that the teacher has given you to join the session</h2>
+       <div class="row content">
+         <!-- Left -->  
+         <div class="col-sm-2 sidenav"></div>
+         
+         <!-- Middle --> 
+         <div id="OverzichtCenter" class="col-sm-8 text-center">
+             <h2>Type here the code that the teacher has given you to join the session</h2>
               <br>
               
             <input ng-model="code" type="text" class="form-control input-lg" style="text-align:center" >
@@ -70,9 +72,14 @@
             <br>
             <button ng-click="betreedt()" type="button" id="VraagButton" class="btn btn-primary btn-lg">Betreedt les</button>
         </div>
-      
+         
+         <!-- Right -->    
+         <div class="col-sm-2 sidenav"></div>
+           
+       </div>
       </div>
-      </div>
+        
+    
   </body>
     
     

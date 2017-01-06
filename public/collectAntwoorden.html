@@ -50,7 +50,9 @@
          
          <!-- Middle --> 
          <div class="col-sm-8 text-center" id="OverzichtCenter">
+             <h1 id="RandomCodeTag"/>
              <h1>Antwoorden</h1>
+             <h2 id="Aantaljanee"></h2>
              <ul id="vragen" class="list-group"></ul>
       
               <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="backvragen()" >Nieuwe vraag</button>
@@ -77,6 +79,10 @@
             var LesVraagFilterd = removequestion.replace('?', '');
             var boolcheck;
             var user;
+            var ja = 0;
+            var nee = 0;
+          
+            
           
           
             var app = angular.module('myApp', []);
@@ -124,16 +130,30 @@
             var RandomCode = localStorage.getItem('FilterRandomCode');
             var RandomFiltered = RandomCode.slice(1,-1);
             console.log(RandomFiltered);
+            $(function(){
+                document.getElementById('RandomCodeTag').innerHTML = 'Code: ' + RandomFiltered;
+            });
             var socket = io("/" + RandomFiltered);
             socket.on('antwoord', function(msg){
-                if (msg.bool == "true"){
-
-                    $('#vragen').append($('<li class="list-group-item" style="color: red">').text(msg.vraag));
+                
+                if(msg.type == "janee"){
+                    if(msg.vraag == "Ja"){
+                    ja++;
+                }
+                else if(msg.vraag == "Nee"){
+                    nee++;
+                }
+                    $("#Aantaljanee").text("Aantal Ja's: " + ja +"Aantal Nee's: "+ nee)
                 }
                 
-                if (msg.bool == "false"){
+                else {
+                    if (msg.bool == "true"){
+                        $('#vragen').append($('<li class="list-group-item" style="color: red">').text(msg.vraag));
+                    }
 
-                    $('#vragen').append($('<li class="list-group-item" style="color: green">').text(msg.vraag));
+                    if (msg.bool == "false"){
+                        $('#vragen').append($('<li class="list-group-item" style="color: green">').text(msg.vraag));
+                    }
                 }
                 
             });

@@ -115,13 +115,12 @@
         $("#closediv").hide();
         $("#CheckMoeilijk").hide();
           
-        
         var mogelijkeantwoorden;
         var JA;
         var NEE;
+        var array = [];
         window.onload = function () {
                 var input = document.querySelector('input[type=checkbox]');
-
                 function check() {
                     boolcheck = input.checked ? "true" : "false";
                 }
@@ -130,13 +129,15 @@
             };
             
         var app = angular.module("ApiCall", []);
-       app.controller("myCtrl", function($scope){ 
+        app.controller("myCtrl", function($scope){ 
+        
         $scope.AnswerMulti = function(antwoorde){
             socket.emit('antwoord', { vraag: antwoorde , bool: boolcheck});
              $("#meerkeuzediv").hide();
              $("#loadingdiv").show();
              $("#CheckMoeilijk").hide();
             document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
+            $scope.meerkeuzeantwoorden = [];
         };
             
         $scope.addAnswer = function(){
@@ -158,8 +159,7 @@
         
         $scope.AnswerJA = function(){
             JA = 'Ja';
-            
-            socket.emit('antwoord', { vraag: JA , bool: boolcheck});
+            socket.emit('antwoord', { vraag: JA , bool: boolcheck, type: "janee"});
              $("#janeediv").hide();
              $("#loadingdiv").show();
              $("#CheckMoeilijk").hide();
@@ -168,15 +168,14 @@
             
         $scope.AnswerNEE = function(){
             NEE = 'Nee'
-             
-            socket.emit('antwoord', { vraag: NEE , bool: boolcheck});
+            socket.emit('antwoord', { vraag: NEE , bool: boolcheck, type: "janee"});
              $("#janeediv").hide();
              $("#loadingdiv").show();
              $("#CheckMoeilijk").hide();
             document.getElementById("devraag").innerHTML = "Wachten op nieuwe vraag";
         };
             
-        $scope.meerkeuzeantwoorden = ["kappa21", "13115", "amalnz", ";azlnzl"];
+        $scope.meerkeuzeantwoorden = [];
         socket.on('Antwoorden', function(Antwoorden){
             for (var i = 0; i < Antwoorden.length; i++){
                 $scope.meerkeuzeantwoorden.push(Antwoorden[i].MeerkeuzeAntwoorden); 

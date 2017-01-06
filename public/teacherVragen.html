@@ -104,17 +104,18 @@
                 <br>
                 <ul id="messages"></ul>
                 <input ng-model="addMe" class="form-control input-lg" type="text" style="text-align:center" id="m"/>
-                 <form name="myForm" ng-submit="">
-                 
                 
-                <input id="file" type="file" accept="file_extension|image/*" class="form-control input-sm" required>
+                 <form id="upload" name="myForm" ng-submit="">
+                    <input id="file" type="file" accept="file_extension|image/*" data-max-size="1000000" class="form-control input-sm" required>
                 </form>
+                
+                 
             </div>
-            
-            
-            
+             
                 <br>
-                <button ng-click="addVraag()" type="button" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
+             
+                <button ng-click="addVraag()" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
+                <button form="upload" ng-click="AfbeeldingVraag()" type="submit" id="uploadbutton" class="btn btn-primary btn-lg" >Stel afbeelding!</button>
              
                 <button type="button" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
              
@@ -128,19 +129,11 @@
              
         </div>
        </div>
- 
-      
-      
-      
-        
-     
 
-
-
-       
-      
     <script>
         var RandomCode = localStorage.getItem('FilterRandomCode');
+        var fileInput = $('#file');
+        var maxSize = fileInput.data('max-size');
         
         $(function(){
             document.getElementById('RandomCodeTag').innerHTML = RandomCode;
@@ -178,11 +171,42 @@
               });
         };
         
-        
-                
             
+            $scope.AfbeeldingVraag = function() {
+                 $('#upload').submit(function(e){
+                    if(fileInput.get(0).files.length){
+                        var fileSize = fileInput.get(0).files[0].size; // in bytes
+                        if(fileSize>maxSize){
+                            alert('file size is more then' + maxSize + ' bytes');
+                            return false;
+                        }else if (fileSize < maxSize){
+                            console.log("kappa");
+                $http({method: 'POST', url: "http://localhost/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
+                  }).then(function successCallback(response) {
+                    localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
+                    socket.emit('vraag', $('#m').val());
+                    $('#m').val('');
+                    socket.emit('typevraag', type);
+                    
+                }, function errorCallback(response) {
+                    console.log("error met deze user te updaten");
+              }); 
+                var timer = setTimeout(function() {
+                        window.location="/collectAntwoorden.html"
+                    }, 100);    
+                        }
+                        
+                    }else{
+                        alert('choose file, please');
+                        return false;
+                    }
+
+                });      
+
+            };
+                
         $scope.addVraag = function() {
-             $http({method: 'POST', url: "http://localhost/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
+            $http({method: 'POST', url: "http://localhost/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
                     console.log("User updated");
@@ -199,6 +223,7 @@
                         window.location="/collectAntwoorden.html"
                     }, 100);
         };
+             
         $scope.MogelijkeAntwoorden = [];
             
         $scope.AntwoordenAdd = function() {
@@ -215,7 +240,6 @@
         });
         console.log($scope.MogelijkeAntwoorden.x);
     };
-            
             $(function(){
                $("#file").on('change', function(e){
                    var file = e.originalEvent.target.files[0];
@@ -244,17 +268,23 @@
             }, 100);
         }); 
     </script>
+      
       <script>                  
         var type;
             $("#OpenVraag").hide();
             $("#JaNeeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
-        $("#vraag1").click(function(){
+            $("#uploadbutton").hide();
+            $("#VraagButton").show();
+        
+          $("#vraag1").click(function(){
             $("#OpenVraag").show();
             $("#JaNeeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
+            $("#uploadbutton").hide();
+            $("#VraagButton").show();
             type = "open";
         });
            $("#vraag2").click(function(){
@@ -262,6 +292,8 @@
             $("#JaNeeVraag").show();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").hide();
+            $("#uploadbutton").hide();
+            $("#VraagButton").show();
             type = "janee";
         });
            $("#vraag4").click(function(){
@@ -269,6 +301,8 @@
             $("#JaNeeVraag").hide();
             $("#MeerkeuzenVraag").show();
             $("#AfbeeldingVraag").hide();
+            $("#uploadbutton").hide();
+            $("#VraagButton").show();
             type = "meerkeuzen";
         });
            $("#vraag5").click(function(){
@@ -276,6 +310,8 @@
             $("#JaNeeVraag").hide();
             $("#MeerkeuzenVraag").hide();
             $("#AfbeeldingVraag").show();
+            $("#uploadbutton").show();
+            $("#VraagButton").hide();
             type = "afbeelding";
         });
     </script>

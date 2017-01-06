@@ -67,7 +67,8 @@ var array = [];
 var UserID;
 var UserDisplayName;
 var UserProfileImage;
-
+var antwoordenArray = [];
+var SentPhoto;
 
 
 //////////////////////////////pulls data out file
@@ -134,11 +135,13 @@ app.get('/randomcode', function (req, res) {
             if(currentvragen[i].id == RandomRoomCode){
                 nsp.to(socketid).emit('vraag', currentvragen[i].vraag);
                 nsp.to(socketid).emit('typevraag', currentvragen[i].type);
+                nsp.to(socketid).emit('Antwoorden', antwoordenArray);
+                
             }  
         }
         
     socket.on('vraag', function(msg){
-        
+        antwoordenArray = [];
         for (var i = 0; i < currentvragen.length; i++) {
             if(currentvragen[i].id == RandomRoomCode){
                
@@ -152,14 +155,14 @@ app.get('/randomcode', function (req, res) {
                 currentvragen.push(element)
             }
         }
-        
         nsp.emit('vraag', msg);
         console.log('vraag: ' + msg);
     });
             
     socket.on('Antwoorden', function(Antwoorden){
-        nsp.emit('Antwoorden', Antwoorden);
-        console.log('Antwoorden: ' + Antwoorden);
+        antwoordenArray = Antwoorden;
+        nsp.emit('Antwoorden', antwoordenArray);
+        console.log('Antwoorden: ' + antwoordenArray);
     });
     
     socket.on('typevraag', function(type){
@@ -174,15 +177,14 @@ app.get('/randomcode', function (req, res) {
                
             
     socket.on('antwoord', function(antwoord){
-        
             nsp.emit('antwoord', antwoord);
             console.log('antwoord: ' + antwoord);  
             var element = {};
-                element.socketids = socket.id;
-   
+            element.socketids = socket.id;
     });
             
     socket.on('user image', function(image){
+        image;
         nsp.emit('addimage', 'Image received: ', image);
     });  
             
