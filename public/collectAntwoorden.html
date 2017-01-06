@@ -79,13 +79,9 @@
             var ja = 0;
             var nee = 0;
           
-            
-          
-          
             var app = angular.module('myApp', []);
             app.controller("myCtrl", function($scope ,$http, $filter){
             
-           
             $scope.probleemvraag = function() {
                 console.log("test");
                 $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/true"
@@ -119,16 +115,16 @@
                 document.getElementById('RandomCodeTag').innerHTML =  '"' + RandomFiltered + '"';
             });
                 
+            
+            var socket = io("/" + RandomFiltered);
+            
              $scope.backvragen = function() {
-                var socket = io("/" + RandomFiltered);
                 socket.emit('vraag', "Nieuwe vraag komt eraan");
                 socket.emit('typevraag', "Nieuwe vraag");
                 var timer = setTimeout(function() {
                 window.location="/teacherVragen.html"}, 200);
-            }
+            };
     
-            var socket = io("/" + RandomFiltered);
-                
             socket.on('antwoord', function(msg){
                 
                 if(msg.type == "janee"){
