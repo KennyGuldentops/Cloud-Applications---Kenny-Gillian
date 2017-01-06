@@ -181,7 +181,7 @@
                             return false;
                         }else if (fileSize < maxSize){
                             console.log("kappa");
-                $http({method: 'POST', url: "http://localhost/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
+                $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
                     socket.emit('vraag', $('#m').val());
@@ -206,7 +206,7 @@
             };
                 
         $scope.addVraag = function() {
-            $http({method: 'POST', url: "http://localhost/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
+            $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
                     console.log("User updated");
@@ -252,7 +252,7 @@
             });
       
         var timer = setTimeout(function() {
-            $http({method: 'GET', url: "http://localhost/probleemvragen/"+user+"/"+LesNaamFiltered}).then(
+            $http({method: 'GET', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvragen/"+user+"/"+LesNaamFiltered}).then(
                 function successCallback(response) {
                     $scope.todoList = [];
                     for (var i = 0; i < response.data.length; i++) {

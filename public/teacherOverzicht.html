@@ -36,7 +36,7 @@
          
         $scope.StartLes = function() {
             $http({method: 'GET'
-                   , url: 'http://localhost/randomcode'
+                   , url: 'http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/randomcode'
                   }).then(function successCallback(response) {
                     var RandomCode = response.data;
                     localStorage.setItem('FilterRandomCode', JSON.stringify(RandomCode));

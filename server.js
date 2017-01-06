@@ -19,7 +19,7 @@ var FacebookAuth = require('passport-facebook').Strategy;
 passport.use(new FacebookAuth({
     clientID: '160901634379580',
     clientSecret: '2a42f07d85f26fcad2a937c115828bc7',
-    callbackURL: 'http://localhost:80/login/facebook/return',
+    callbackURL: 'http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/login/facebook/return',
     profileFields: ['id', 'name', 'displayName', 'photos', 'hometown', 'profileUrl']
   },              
 function(accessToken, refreshToken, profile, cb) {
@@ -57,7 +57,7 @@ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Ty
   next();
 });
 
-var port  	 = process.env.PORT || 80;
+var port  	 = process.env.PORT || 8080;
 var datani;
 var indatabase;
 var indatabaselesnaam;
