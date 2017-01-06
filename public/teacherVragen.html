@@ -118,10 +118,12 @@
                 <button form="upload" ng-click="AfbeeldingVraag()" type="submit" id="uploadbutton" class="btn btn-primary btn-lg" >Stel afbeelding!</button>
              
                 <button type="button" ng-click="closesocket()" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
-             
+             <br>
+             <br>
+             <br>
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat="item in items track by $index">{{item}}</li>
-            </ul>
+                <li class="list-group-item" ng-repeat="item in items track by $index">{{item}}<button ng-click="removeProbleemvraag()" id="kruisjes">&#10799;</button></li>
+                </ul>
           </div>
                   
         <!-- Right -->    
@@ -248,6 +250,19 @@
         });
         console.log($scope.MogelijkeAntwoorden.x);
     };
+    
+    $scope.removeProbleemvraag = function(){
+            
+            $http({method: 'POST', url: "http://localhost/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/false"
+                  }).then(function successCallback(response) {
+                    console.log(response);
+                    
+                }, function errorCallback(response) {
+                    console.log("error met deze user te updaten");
+              }); 
+            
+    };        
+            
             $(function(){
                $("#file").on('change', function(e){
                    var file = e.originalEvent.target.files[0];

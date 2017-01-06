@@ -60,6 +60,15 @@ body {
     max-height: 70%;
 }
 
+#kruisjes{
+    background-color: transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
 .loader {
     border: 16px solid #f3f3f3;
     border-radius: 50%;
@@ -71,7 +80,6 @@ body {
     display: block;
     margin: auto;
     margin-top: 5%;
-    
 }
 
 @-webkit-keyframes spin {
