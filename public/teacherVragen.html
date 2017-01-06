@@ -95,7 +95,7 @@
                 </form>
 
                  <div  ng-repeat="x in MogelijkeAntwoorden">
-                    <input id="Keuzes" type="checkbox" ng-click="removeProbleemvraag()" ng-model="x.remove"> <span ng-bind="x.MeerkeuzeAntwoorden"></span>
+                    <input id="Keuzes" type="checkbox" ng-click="remove()" ng-model="x.remove"> <span ng-bind="x.MeerkeuzeAntwoorden"></span>
                 </div>
             </div>
             
@@ -124,9 +124,10 @@
              
              <ul class="list-group">                 
                 <li class="list-group-item" ng-repeat="item in items">
-                        <button id="kruisjes" ng-click="remov(item)">{{item}}</button>
+                        <button id="kruisjes" ng-click="removeProbleemvraag(item)">{{item}}</button>
                 </li>
              </ul>
+
           </div>
                   
         <!-- Right -->    
