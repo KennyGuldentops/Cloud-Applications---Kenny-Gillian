@@ -121,9 +121,19 @@
              <br>
              <br>
              <br>
-            <ul class="list-group">
-                <li class="list-group-item" ng-repeat="item in items track by $index">{{item}}<button ng-click="removeProbleemvraag()" id="kruisjes">&#10799;</button></li>
-                </ul>
+             
+             <ul class="list-group">                 
+                <li class="list-group-item" ng-repeat="item in items">
+                        <button id="kruisjes" ng-click="remov(item)">{{item}}</button>
+                </li>
+             </ul>
+             
+             <ul>
+                <li ng-repeat="item in items">
+                     <button ng-click="removeProbleemvraag(item)">{{item}}</button>
+                </li>
+            </ul>
+
           </div>
                   
         <!-- Right -->    
@@ -157,6 +167,9 @@
         var RandomFiltered = RandomCode.slice(1,-1);
         console.log(RandomFiltered);
         var socket = io("/" + RandomFiltered);
+        var LesVraag = localStorage.getItem('StorageVraag');
+        var removequestion = LesVraag.slice(1,-1);
+        var LesVraagFilterd = removequestion.replace('?', '');
         
         $scope.getProfile = function(){
             $http({
@@ -202,9 +215,7 @@
                         alert('choose file, please');
                         return false;
                     }
-
                 });      
-
             };
                 
         $scope.addVraag = function() {
@@ -252,27 +263,26 @@
     };
     
     $scope.removeProbleemvraag = function(){
-            
-            $http({method: 'POST', url: "http://localhost/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/false"
+        $http({method: 'POST', url: "http://localhost/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+item+"/false"
+                   /////////////////// remove out of list ///////////////////
                   }).then(function successCallback(response) {
                     console.log(response);
-                    
+                    $scope.items.splice(index, 1);
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
               }); 
-            
     };        
             
-            $(function(){
-               $("#file").on('change', function(e){
-                   var file = e.originalEvent.target.files[0];
-                   var reader = new FileReader();
-                   reader.onload = function(evt){
-                       socket.emit('user image', evt.target.result);
-                   };
-                   reader.readAsDataURL(file);
-               });
-            });
+        $(function(){
+           $("#file").on('change', function(e){
+               var file = e.originalEvent.target.files[0];
+               var reader = new FileReader();
+               reader.onload = function(evt){
+                   socket.emit('user image', evt.target.result);
+               };
+               reader.readAsDataURL(file);
+           });
+        });
       
         var timer = setTimeout(function() {
             $http({method: 'GET', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvragen/"+user+"/"+LesNaamFiltered}).then(
