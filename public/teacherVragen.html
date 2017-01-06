@@ -169,7 +169,6 @@
         var socket = io("/" + RandomFiltered);
         var LesVraag = localStorage.getItem('StorageVraag');
         var removequestion = LesVraag.slice(1,-1);
-        var LesVraagFilterd = removequestion.replace('?', '');
         
         $scope.getProfile = function(){
             $http({
