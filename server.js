@@ -93,13 +93,9 @@ MongoClient.connect(database.url, function (err, db) {if (err) {console.log('Una
         }       
 }); 
 
-app.get('/heeljson', function (req, res) {	
-    res.json(datani);
-    console.log(datani);
-});
-
-app.get('/push', function (req, res) {
-    MongoClient.connect(database.url, function (err, db) {
+var minutes = 5, the_interval = minutes * 60 * 1000;
+    setInterval(function() {
+            MongoClient.connect(database.url, function (err, db) {
     if (err) {
         console.log('Unable to connect to the mongoDB server. Error:', err);
       } else {
@@ -109,8 +105,17 @@ app.get('/push', function (req, res) {
           collection.remove({}, function (err, remove) {});
           collection.insert(datani, function(err, doc) {if(err) throw err;});
   }       
-});                   
+}); 
+    }, the_interval);    
+
+app.get('/heeljson', function (req, res) {	
+    res.json(datani);
+    console.log(datani);
 });
+
+
+                  
+
      
 var currentvragen = [
         {"vraag":"hallo ?", "type":"open", "id":"12345"},  

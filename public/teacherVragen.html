@@ -117,7 +117,7 @@
                 <button ng-click="addVraag()" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
                 <button form="upload" ng-click="AfbeeldingVraag()" type="submit" id="uploadbutton" class="btn btn-primary btn-lg" >Stel afbeelding!</button>
              
-                <button type="button" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
+                <button type="button" ng-click="closesocket()" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
              
             <ul class="list-group">
                 <li class="list-group-item" ng-repeat="item in items track by $index">{{item}}</li>
@@ -224,6 +224,14 @@
                     }, 100);
         };
              
+        $scope.closesocket = function() {
+                var socket = io("/" + RandomFiltered);
+                console.log("socketclosin") 
+                
+                socket.emit('typevraag', "closed");
+                socket.emit('vraag', "Deze les is gesloten");
+            }
+        
         $scope.MogelijkeAntwoorden = [];
             
         $scope.AntwoordenAdd = function() {
@@ -265,7 +273,7 @@
                 }, function errorCallback(response) {
                     console.log("error pullen van probleemvraag");
               });     
-            }, 100);
+            }, 200);
         }); 
     </script>
       
