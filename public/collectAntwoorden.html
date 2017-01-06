@@ -55,9 +55,9 @@
              <h2 id="Aantaljanee"></h2>
              <ul id="vragen" class="list-group"></ul>
       
-              <button ng-disabled="myForm.$invalid" class="btn btn-default" ng-click="backvragen()" >Nieuwe vraag</button>
+              <button class="btn btn-default" ng-click="backvragen()" >Nieuwe vraag</button>
               
-              <button  class="btn btn-default" ng-click="probleemvraag()">Was deze vraag een probleemvraag?</button>
+              <button class="btn btn-default" ng-click="probleemvraag()">Was deze vraag een probleemvraag?</button>
             </div>
          
          <!-- Right -->    
@@ -84,15 +84,8 @@
           
             var app = angular.module('myApp', []);
             app.controller("myCtrl", function($scope ,$http, $filter){
-            $scope.backvragen = function() {
-                var socket = io("/" + RandomFiltered);
-              
-                socket.emit('vraag', "Nieuwe vraag komt eraan");
-                socket.emit('typevraag', "Nieuwe vraag");
-                var timer = setTimeout(function() {
-                window.location="/teacherVragen.html"}, 200);
-            }
-
+            
+           
             $scope.probleemvraag = function() {
                 console.log("test");
                 $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/true"
@@ -103,6 +96,7 @@
                     console.log("error met deze user te updaten");
               }); 
             };
+                
             $scope.getProfile = function(){
             $http({
                   method: 'GET',
@@ -124,6 +118,15 @@
             $(function(){
                 document.getElementById('RandomCodeTag').innerHTML =  '"' + RandomFiltered + '"';
             });
+                
+             $scope.backvragen = function() {
+                var socket = io("/" + RandomFiltered);
+                socket.emit('vraag', "Nieuwe vraag komt eraan");
+                socket.emit('typevraag', "Nieuwe vraag");
+                var timer = setTimeout(function() {
+                window.location="/teacherVragen.html"}, 200);
+            }
+    
             var socket = io("/" + RandomFiltered);
                 
             socket.on('antwoord', function(msg){
