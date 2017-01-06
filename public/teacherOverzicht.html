@@ -35,6 +35,16 @@
         app.controller("myCtrl", function($scope ,$http, $filter){
          
         $scope.StartLes = function() {
+            
+            $http({
+                method: 'GET',
+                url: 'http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/push'
+            }).then(function successCallback(response) {
+                    console.log("pushed naar database");
+                }, function errorCallback(response) {
+                    console.log("error pushing naar database");
+            });
+            
             $http({method: 'GET'
                    , url: 'http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/randomcode'
                   }).then(function successCallback(response) {

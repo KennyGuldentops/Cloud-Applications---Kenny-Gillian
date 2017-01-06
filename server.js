@@ -73,11 +73,29 @@ var SentPhoto;
 
 //////////////////////////////pulls data out file
 
-fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {datani = JSON.parse( data );});
+//Pull van database
+MongoClient.connect(database.url, function (err, db) {if (err) {console.log('Unable to connect to the mongoDB server. Error:', err);} 
+    else {
+        console.log('Connected ready for pull');
+        var collection = db.collection("dummyDB");
+        db.collection('dummyDB').find({}).toArray( function(err, json){
+            if(err){console.log(err);}
+            else{
+                console.log('pulling json writing to file');
+                json.forEach(function(doc) {
+                datani = JSON.stringify(doc);
+                console.log(datani);
+                fs.writeFile( __dirname + "/" + "lijstje2.json",datani , 'utf8', function (err, data) {});
+                fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {datani = JSON.parse( data );});
+                })
+            }
+        });
+        }       
+}); 
 
 app.get('/heeljson', function (req, res) {	
-			res.json(datani);
-            console.log(datani);
+    res.json(datani);
+    console.log(datani);
 });
 
 app.get('/push', function (req, res) {
@@ -93,33 +111,12 @@ app.get('/push', function (req, res) {
   }       
 });                   
 });
-
-app.get('/pull', function (req, res) {		 
-			MongoClient.connect(database.url, function (err, db) {if (err) {console.log('Unable to connect to the mongoDB server. Error:', err);} 
-                else {
-                    console.log('Connected ready for pull');
-                    var collection = db.collection("dummyDB");
-                    db.collection('dummyDB').find({}).toArray( function(err, json){
-                        if(err){console.log(err);}
-                        else{
-                            console.log('pulling json writing to file');
-                            res.json("pulled from database");
-                            json.forEach(function(doc) {
-                            datani = JSON.stringify(doc);
-                            console.log(datani);
-                            fs.writeFile( __dirname + "/" + "lijstje2.json",datani , 'utf8', function (err, data) {});
-                            fs.readFile( __dirname + "/" + "lijstje2.json", 'utf8', function (err, data) {datani = JSON.parse( data );});
-                            })
-                        }
-                    });
-                    }       
-            });      
-});
-
+     
 var currentvragen = [
         {"vraag":"hallo ?", "type":"open", "id":"12345"},  
         {"vraag":"hallo oke ?", "type":"OpenVraag", "id":"54321"}
 ];
+
 var idray = [
         {"socketids":"15616"},  
         {"socketids":"15648"}
