@@ -85,12 +85,12 @@
             var app = angular.module('myApp', []);
             app.controller("myCtrl", function($scope ,$http, $filter){
             $scope.backvragen = function() {
-               var socket = io("/" + RandomFiltered);
+                var socket = io("/" + RandomFiltered);
               
                 socket.emit('vraag', "Nieuwe vraag komt eraan");
                 socket.emit('typevraag', "Nieuwe vraag");
                 var timer = setTimeout(function() {
-                        window.location="/teacherVragen.html"}, 100);
+                window.location="/teacherVragen.html"}, 200);
             }
 
             $scope.probleemvraag = function() {

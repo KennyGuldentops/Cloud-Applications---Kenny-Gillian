@@ -100,7 +100,6 @@ var minutes = 5, the_interval = minutes * 60 * 1000;
         console.log('Unable to connect to the mongoDB server. Error:', err);
       } else {
           console.log('OK pushing to database ');
-          res.json("pushed to database");
           var collection = db.collection("dummyDB");
           collection.remove({}, function (err, remove) {});
           collection.insert(datani, function(err, doc) {if(err) throw err;});
