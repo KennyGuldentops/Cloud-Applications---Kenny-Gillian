@@ -7,7 +7,7 @@
  * Change url in file
  
 * Change all paths to your AWS URL
- * a
+ * in all html files
 
 
 ### How te deploy ###
