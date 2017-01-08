@@ -416,6 +416,7 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
                                                 if(req.params.bool == 'false'){
                                                     datani.users[i].Lessen[x].vragen[y].probleemvraag = "false"
                                                 }
+                                                 return;
                                                  res.json("de boolean is: " +datani.users[i].Lessen[x].vragen[y].probleemvraag);
                                              }
                                              
@@ -438,23 +439,23 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
 app.get('/login/facebook',
   passport.authenticate('facebook'));
 
-app.get('/login/facebook/return', 
+app.get('/login/facebook/return/:LoggedUser', 
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/teacherOverzicht.html');
+    if(req.params.LoggedUser == ""){
+        res.redirect('/teacherOverzicht.html');
+    }
+   
     UserID = req.user.id;
     UserDisplayName = req.user.displayName;
     
     UserProfileImage = req.user._json.picture.data.url;
     console.log(req.user._json.picture.data.url)
-  });
-
-app.get('/profileInfo', function(req, res){
+    
     var User = UserID + UserDisplayName;
     var ProfilePicture = UserProfileImage
     res.json({name: User , url: ProfilePicture});
-    
-});
+  });
 
 
 /*

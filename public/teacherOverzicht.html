@@ -33,10 +33,7 @@
           
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope ,$http, $filter){
-        
-                 
-       
-            
+
         $scope.StartLes = function() {
             $http({method: 'GET'
                    , url: 'http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/randomcode'
@@ -59,7 +56,7 @@
             $scope.getProfile = function(){
             $http({
               method: 'GET',
-              url: '/profileInfo'
+              url: '/login/facebook/return/test'
             }).then(function successCallback(response) {
                 user = response.data.name;
                 var UserName = user.replace(/\d+/g, '');
