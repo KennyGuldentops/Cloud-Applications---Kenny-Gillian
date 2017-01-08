@@ -167,7 +167,7 @@
         $scope.getProfile = function(){
             $http({
               method: 'GET',
-              url: '/login/facebook/return/test'
+              url: '/profileInfo'
             }).then(function successCallback(response) {
                 user = response.data.name;
                 var UserName = user.replace(/\d+/g, '');

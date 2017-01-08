@@ -439,13 +439,10 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
 app.get('/login/facebook',
   passport.authenticate('facebook'));
 
-app.get('/login/facebook/return/:LoggedUser', 
+app.get('/login/facebook/return', 
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
-    if(req.params.LoggedUser == ""){
-        res.redirect('/teacherOverzicht.html');
-    }
-   
+    res.redirect('/teacherOverzicht.html');
     UserID = req.user.id;
     UserDisplayName = req.user.displayName;
     
@@ -456,6 +453,13 @@ app.get('/login/facebook/return/:LoggedUser',
     var ProfilePicture = UserProfileImage
     res.json({name: User , url: ProfilePicture});
   });
+
+app.get('/profileInfo', function(req, res){
+    var User = UserID + UserDisplayName;
+    var ProfilePicture = UserProfileImage
+    res.json({name: User , url: ProfilePicture});
+    
+});
 
 
 /*
