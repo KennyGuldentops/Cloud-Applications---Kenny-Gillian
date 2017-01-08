@@ -256,7 +256,7 @@
     };
     
     $scope.removeProbleemvraag = function(item){
-        $http({method: 'POST', url: "http://http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+item+"/false"
+        $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+item+"/false"
                    /////////////////// remove out of list ///////////////////
                   }).then(function successCallback(response) {
                     console.log(response);
