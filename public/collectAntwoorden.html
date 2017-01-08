@@ -94,7 +94,6 @@
             $scope.probleemvraag = function() {
                 $http({method: 'POST', url: "/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/true"
                   }).then(function successCallback(response) {
-                    console.log(response);
                     $("#successpopup").show().delay(2000).fadeOut();
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
@@ -109,7 +108,7 @@
           
             var RandomCode = localStorage.getItem('FilterRandomCode');
             var RandomFiltered = RandomCode.slice(1,-1);
-            console.log(RandomFiltered);
+
             $(function(){
                 document.getElementById('RandomCodeTag').innerHTML =  '"' + RandomFiltered + '"';
             });

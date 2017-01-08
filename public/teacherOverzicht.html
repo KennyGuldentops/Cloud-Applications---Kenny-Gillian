@@ -53,20 +53,29 @@
               });  
             };
             
+
             $scope.getProfile = function(){
             $http({
               method: 'GET',
               url: '/profileInfo'
             }).then(function successCallback(response) {
                 
-                
-                
+                var test = localStorage.getItem('test123');
+
                 var namedatabase = response.data.name;
+                var urlpicture = response.data.url;
+                if(test == "kappa"){
+  
+                
                 localStorage.setItem('namedatabase', JSON.stringify(namedatabase));
                 
-                var urlpicture = response.data.url;
+                
                 localStorage.setItem('urlpicture', JSON.stringify(urlpicture));
                 
+                    
+                }
+                
+               
                 
                 var ProfileImage = localStorage.getItem('urlpicture');
                 var urlquotesweg = ProfileImage.slice(1,-1);
@@ -77,10 +86,19 @@
                 $("#ProfileImage").attr("src", urlquotesweg);
                 $('#UserWelkom').text("Welkom, " + userquotesweg);
                 
+                
+                
+                localStorage.setItem('test123', "alreadylog");
+                
+                
               }, function errorCallback(response) {
                 console.log("cannot get profile info");
               });
         };
+            
+            
+            
+            
         });
       </script>
       

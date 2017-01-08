@@ -416,8 +416,9 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
                                                 if(req.params.bool == 'false'){
                                                     datani.users[i].Lessen[x].vragen[y].probleemvraag = "false"
                                                 }
-                                                 return;
+                                                 
                                                  res.json("de boolean is: " +datani.users[i].Lessen[x].vragen[y].probleemvraag);
+                                                 return;
                                              }
                                              
                                          }
@@ -451,14 +452,17 @@ app.get('/login/facebook/return',
     
     var User = UserID + UserDisplayName;
     var ProfilePicture = UserProfileImage
+   
     res.json({name: User , url: ProfilePicture});
+     return;
   });
 
 app.get('/profileInfo', function(req, res){
     var User = UserID + UserDisplayName;
     var ProfilePicture = UserProfileImage
-    res.json({name: User , url: ProfilePicture});
     
+    res.json({name: User , url: ProfilePicture});
+    return;
 });
 
 

@@ -116,8 +116,6 @@
              
                 <button ng-click="addVraag()" id="VraagButton" class="btn btn-primary btn-lg" >Stel vraag!</button>
                 <button form="upload" ng-click="AfbeeldingVraag()" type="submit" id="uploadbutton" class="btn btn-primary btn-lg" >Stel afbeelding!</button>
-             
-                <button type="button" ng-click="closesocket()" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
                 <button ng-click="closesocket()" type="button" class="btn btn-primary btn-lg">Start nieuwe les</button>
              <br>
              <br>
@@ -161,7 +159,6 @@
         
         var RandomCode = localStorage.getItem('FilterRandomCode');
         var RandomFiltered = RandomCode.slice(1,-1);
-        console.log(RandomFiltered);
         var socket = io("/" + RandomFiltered);
         
              
@@ -184,7 +181,6 @@
                             alert('file size is more then' + maxSize + ' bytes');
                             return false;
                         }else if (fileSize < maxSize){
-                            console.log("kappa");
                 $http({method: 'POST', url: "/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
@@ -211,7 +207,7 @@
             $http({method: 'POST', url: "/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
-                    console.log("User updated");
+
                     socket.emit('vraag', $('#m').val());
                     $('#m').val('');
                     socket.emit('typevraag', type);
@@ -228,7 +224,7 @@
              
         $scope.closesocket = function() {
                 var socket = io("/" + RandomFiltered);
-                console.log("socketclosin") 
+
                 
                 socket.emit('typevraag', "closed");
                 socket.emit('vraag', "Deze les is gesloten");
@@ -240,7 +236,7 @@
         $scope.AntwoordenAdd = function() {
             $scope.MogelijkeAntwoorden.push({MeerkeuzeAntwoorden:$scope.Remove});
             $scope.Remove = "";
-            console.log($scope.MogelijkeAntwoorden);
+
         };
 
     $scope.remove = function() {
@@ -249,14 +245,14 @@
         angular.forEach(oldList, function(x) {
             if (!x.remove) $scope.MogelijkeAntwoorden.push(x);
         });
-        console.log($scope.MogelijkeAntwoorden.x);
+
     };
     
     $scope.removeProbleemvraag = function(item, index){
         $http({method: 'POST', url: "/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+item+"/false"
                    /////////////////// remove out of list ///////////////////
                   }).then(function successCallback(response) {
-                    console.log(response);
+
                     $scope.items.splice(index, 1);
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
@@ -279,7 +275,6 @@
                 function successCallback(response) {
                     $scope.todoList = [];
                     for (var i = 0; i < response.data.length; i++) {
-                        console.log(response.data[i])
                         $scope.items = response.data;
                         $scope.add = function(item) {
                             $scope.items.push(item);
