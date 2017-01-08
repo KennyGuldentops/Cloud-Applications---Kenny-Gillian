@@ -92,7 +92,6 @@
             app.controller("myCtrl", function($scope ,$http, $filter){
             
             $scope.probleemvraag = function() {
-                console.log("test");
                 $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/true"
                   }).then(function successCallback(response) {
                     console.log(response);

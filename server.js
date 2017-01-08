@@ -416,7 +416,7 @@ app.post('/probleemvraag/:naam/:lesnaam/:vraag/:bool', function (req, res) {
                                                 if(req.params.bool == 'false'){
                                                     datani.users[i].Lessen[x].vragen[y].probleemvraag = "false"
                                                 }
-                                                 
+                                                 res.json("de boolean is: " +datani.users[i].Lessen[x].vragen[y].probleemvraag);
                                              }
                                              
                                          }

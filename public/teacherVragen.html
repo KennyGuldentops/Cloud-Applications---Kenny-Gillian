@@ -118,7 +118,7 @@
                 <button form="upload" ng-click="AfbeeldingVraag()" type="submit" id="uploadbutton" class="btn btn-primary btn-lg" >Stel afbeelding!</button>
              
                 <button type="button" ng-click="closesocket()" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
-                <button ng-click="closesocket()" type="button" class="btn btn-primary btn-lg" href="/teacherOverzicht.html">Start nieuwe les</button>
+                <button ng-click="closesocket()" type="button" class="btn btn-primary btn-lg">Start nieuwe les</button>
              <br>
              <br>
              <br>
@@ -163,8 +163,6 @@
         var RandomFiltered = RandomCode.slice(1,-1);
         console.log(RandomFiltered);
         var socket = io("/" + RandomFiltered);
-        var LesVraag = localStorage.getItem('StorageVraag');
-        var removequestion = LesVraag.slice(1,-1);
         
         $scope.getProfile = function(){
             $http({
@@ -238,6 +236,7 @@
                 
                 socket.emit('typevraag', "closed");
                 socket.emit('vraag', "Deze les is gesloten");
+                window.location="/teacherOverzicht.html"
             }
         
         $scope.MogelijkeAntwoorden = [];
