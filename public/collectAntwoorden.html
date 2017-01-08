@@ -58,8 +58,15 @@
               <button class="btn btn-default" ng-click="backvragen()" >Nieuwe vraag</button>
               
               <button class="btn btn-default" ng-click="probleemvraag()">Was deze vraag een probleemvraag?</button>
+                <br>
+                <br>
+              <!-- success div -->     
+              <div id="successpopup" class="alert alert-success">
+                <strong>Success!</strong> Probleemvraag opgeslagen!
+              </div>
+            
             </div>
-         
+            
          <!-- Right -->    
          <div class="col-sm-2 sidenav"></div>
            
@@ -78,6 +85,8 @@
             var user;
             var ja = 0;
             var nee = 0;
+           
+            $("#successpopup").hide();
           
             var app = angular.module('myApp', []);
             app.controller("myCtrl", function($scope ,$http, $filter){
@@ -87,7 +96,7 @@
                 $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/true"
                   }).then(function successCallback(response) {
                     console.log(response);
-                    
+                    $("#successpopup").show().delay(2000).fadeOut();
                 }, function errorCallback(response) {
                     console.log("error met deze user te updaten");
               }); 

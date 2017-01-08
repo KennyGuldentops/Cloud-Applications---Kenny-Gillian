@@ -118,13 +118,15 @@
                 <button form="upload" ng-click="AfbeeldingVraag()" type="submit" id="uploadbutton" class="btn btn-primary btn-lg" >Stel afbeelding!</button>
              
                 <button type="button" ng-click="closesocket()" id="StopSessie" class="btn btn-primary btn-lg">Stop sessie</button>
+                <button ng-click="closesocket()" type="button" class="btn btn-primary btn-lg" href="/teacherOverzicht.html">Start nieuwe les</button>
              <br>
              <br>
              <br>
              
+             <h2>Probleem vragen van deze les</h2>
              <ul class="list-group">                 
                 <li class="list-group-item" ng-repeat="item in items">
-                    <button id="kruisjes" ng-click="removeProbleemvraag(item)">{{item}}</button>
+                    <button id="kruisjes" ng-click="removeProbleemvraag(item)">{{item}} &#10005</button>
                 </li>
              </ul>
 
@@ -255,7 +257,8 @@
         console.log($scope.MogelijkeAntwoorden.x);
     };
     
-    $scope.removeProbleemvraag = function(item){
+    $scope.items = []
+    $scope.removeProbleemvraag = function(item, index){
         $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+item+"/false"
                    /////////////////// remove out of list ///////////////////
                   }).then(function successCallback(response) {
