@@ -154,7 +154,7 @@
     <script src="/socket.io/socket.io.js"></script>
     
     <script>
-        var user;
+        
         
         var app = angular.module("ApiCall", []);
         app.controller("myCtrl", function($scope ,$http, $filter){
@@ -164,21 +164,17 @@
         console.log(RandomFiltered);
         var socket = io("/" + RandomFiltered);
         
-        $scope.getProfile = function(){
-            $http({
-              method: 'GET',
-              url: '/profileInfo'
-            }).then(function successCallback(response) {
-                user = response.data.name;
-                var UserName = user.replace(/\d+/g, '');
-                ProfileImage = response.data.url;
-                $("#ProfileImage").attr("src", ProfileImage);
+             
+                var user = localStorage.getItem('namedatabase');
+
+                var ProfileImage = localStorage.getItem('urlpicture');
+                var userquotesweg = ProfileImage.slice(1,-1);
+                $("#ProfileImage").attr("src", userquotesweg);
                 
-              }, function errorCallback(response) {
-                console.log("cannot get profileinfo");
-              });
-        };
-        
+       
+            
+            
+            
             
             $scope.AfbeeldingVraag = function() {
                  $('#upload').submit(function(e){
@@ -189,7 +185,7 @@
                             return false;
                         }else if (fileSize < maxSize){
                             console.log("kappa");
-                $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
+                $http({method: 'POST', url: "/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
                     socket.emit('vraag', $('#m').val());
@@ -212,7 +208,7 @@
             };
                 
         $scope.addVraag = function() {
-            $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
+            $http({method: 'POST', url: "/addquestion/"+user+"/"+LesNaamFiltered+"/"+$scope.addMe
                   }).then(function successCallback(response) {
                     localStorage.setItem('StorageVraag', JSON.stringify($scope.addMe)); 
                     console.log("User updated");
@@ -257,7 +253,7 @@
     };
     
     $scope.removeProbleemvraag = function(item, index){
-        $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+item+"/false"
+        $http({method: 'POST', url: "/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+item+"/false"
                    /////////////////// remove out of list ///////////////////
                   }).then(function successCallback(response) {
                     console.log(response);
@@ -279,7 +275,7 @@
         });
       
         var timer = setTimeout(function() {
-            $http({method: 'GET', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvragen/"+user+"/"+LesNaamFiltered}).then(
+            $http({method: 'GET', url: "/probleemvragen/"+user+"/"+LesNaamFiltered}).then(
                 function successCallback(response) {
                     $scope.todoList = [];
                     for (var i = 0; i < response.data.length; i++) {

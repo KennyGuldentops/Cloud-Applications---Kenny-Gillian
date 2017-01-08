@@ -92,7 +92,7 @@
             app.controller("myCtrl", function($scope ,$http, $filter){
             
             $scope.probleemvraag = function() {
-                $http({method: 'POST', url: "http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/true"
+                $http({method: 'POST', url: "/probleemvraag/"+user+"/"+LesNaamFiltered+"/"+LesVraagFilterd+"/true"
                   }).then(function successCallback(response) {
                     console.log(response);
                     $("#successpopup").show().delay(2000).fadeOut();
@@ -101,20 +101,11 @@
               }); 
             };
                 
-            $scope.getProfile = function(){
-            $http({
-                  method: 'GET',
-                  url: '/profileInfo'
-                }).then(function successCallback(response) {
-                    user = response.data.name;
-                    var UserName = user.replace(/\d+/g, '');
-                    ProfileImage = response.data.url;
-                    $("#ProfileImage").attr("src", ProfileImage);
-                  }, function errorCallback(response) {
+            var user = localStorage.getItem('namedatabase');
 
-                  });
-              };    
-            
+                var ProfileImage = localStorage.getItem('urlpicture');
+                var userquotesweg = ProfileImage.slice(1,-1);
+                $("#ProfileImage").attr("src", userquotesweg);
           
             var RandomCode = localStorage.getItem('FilterRandomCode');
             var RandomFiltered = RandomCode.slice(1,-1);

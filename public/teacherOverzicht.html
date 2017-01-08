@@ -36,7 +36,7 @@
 
         $scope.StartLes = function() {
             $http({method: 'GET'
-                   , url: 'http://ec2-52-40-248-53.us-west-2.compute.amazonaws.com:8080/randomcode'
+                   , url: '/randomcode'
                   }).then(function successCallback(response) {
                     var RandomCode = response.data;
                     localStorage.setItem('FilterRandomCode', JSON.stringify(RandomCode));
@@ -58,11 +58,25 @@
               method: 'GET',
               url: '/profileInfo'
             }).then(function successCallback(response) {
-                user = response.data.name;
-                var UserName = user.replace(/\d+/g, '');
-                ProfileImage = response.data.url;
-                $("#ProfileImage").attr("src", ProfileImage);
-                $('#UserWelkom').text("Welkom, " + UserName);
+                
+                
+                
+                var namedatabase = response.data.name;
+                localStorage.setItem('namedatabase', JSON.stringify(namedatabase));
+                
+                var urlpicture = response.data.url;
+                localStorage.setItem('urlpicture', JSON.stringify(urlpicture));
+                
+                
+                var ProfileImage = localStorage.getItem('urlpicture');
+                var urlquotesweg = ProfileImage.slice(1,-1);
+                var user = localStorage.getItem('namedatabase');
+                var userfilterd = user.replace(/\d+/g, '');
+                var userquotesweg = userfilterd.slice(1,-1);
+                
+                $("#ProfileImage").attr("src", urlquotesweg);
+                $('#UserWelkom').text("Welkom, " + userquotesweg);
+                
               }, function errorCallback(response) {
                 console.log("cannot get profile info");
               });
