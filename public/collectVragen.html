@@ -143,11 +143,11 @@
         $scope.addAnswer = function(){
             if(typevraag == "open"){
                 socket.emit('antwoord', { vraag: $('#openantwoord').val(), bool: boolcheck });
-                $('#m').val('');
+                $('#openantwoord').val('');
             }
             if(typevraag == "afbeelding"){
                 socket.emit('antwoord', { vraag: $('#afbeeldingantwoord').val(), bool: boolcheck });
-                $('#m').val('');
+                $('#afbeeldingantwoord').val('');
             }
                     $("#opendiv").hide();
                     $("#afbeeldingdiv").hide();
