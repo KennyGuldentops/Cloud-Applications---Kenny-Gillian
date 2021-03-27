@@ -1,4 +1,4 @@
-# Cloud Applications - Kenny Guldentops & Gillian Lambrechts #
+# Cloud Applications - Kenny Guldentops 
 
 ### Files to edit ###
  
